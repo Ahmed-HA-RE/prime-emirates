@@ -14,7 +14,7 @@ const Footer = () => {
         </Link>
       </div>
       <p className='text-center text-sm text-muted-foreground mt-4 tracking-wide'>
-        © {currentYear} ShopeEmirates. All rights reserved.
+        © {currentYear} PrimeEmirates. All rights reserved.
       </p>
     </footer>
   );

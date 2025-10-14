@@ -1,4 +1,4 @@
-import Footer from '~/components/mvpblocks/footer-animated';
+import Footer from '~/components/Footer';
 import type { Route } from './+types';
 
 export function meta({}: Route.MetaArgs) {
@@ -16,7 +16,7 @@ const HomePage = () => {
     <>
       <main className='p-6'>
         <div className='max-w-7xl mx-auto'>
-          <h1>Welcome To ShopEmirates </h1>
+          <h1>Welcome To PrimeEmirates </h1>
         </div>
       </main>
       <Footer />
