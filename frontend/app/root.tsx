@@ -9,6 +9,7 @@ import {
 
 import type { Route } from './+types/root';
 import '@radix-ui/themes/styles.css';
+import Navbar from './components/Navbar/Navbar';
 
 import './app.css';
 import { Theme } from '@radix-ui/themes';
@@ -47,7 +48,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Theme>{children}</Theme>
+        <Theme>
+          <Navbar />
+          {children}
+        </Theme>
         <ScrollRestoration />
         <Scripts />
       </body>
