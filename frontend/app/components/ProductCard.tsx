@@ -51,8 +51,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Button
             className='cursor-pointer bg-white border text-black hover:bg-black hover:text-white transition'
             size='lg'
+            disabled={product && product?.countInStock === 0}
           >
-            Add to cart
+            {product && product?.countInStock > 0
+              ? 'Add To Cart'
+              : 'Out of stock'}
           </Button>
         </CardFooter>
       </Card>

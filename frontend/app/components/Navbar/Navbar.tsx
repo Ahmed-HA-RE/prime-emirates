@@ -19,15 +19,12 @@ export default function Navbar() {
     <header className='border-b px-4 md:px-6 py-2 bg-gray-600'>
       <div className='flex h-16 items-center justify-between gap-4 max-w-7xl mx-auto'>
         {/* Left side */}
-        <div className='flex flex-row md:flex-1/2 items-center gap-1'>
+        <Link to={'/'} className='flex flex-row md:flex-1/2 items-center gap-1'>
           <img src='/assests/logo.png' alt='logo' />
-          <Link
-            to='/'
-            className='text-white font-semibold tracking-wide hidden md:block'
-          >
+          <span className='text-white font-semibold tracking-wide hidden md:block'>
             PrimeEmirates
-          </Link>
-        </div>
+          </span>
+        </Link>
         {/* Search form */}
         <div className='relative md:flex-1/2'>
           <Input
