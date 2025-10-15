@@ -3,6 +3,9 @@ import type { Route } from './+types';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Grid } from '@radix-ui/themes';
 import products from '../../products.json';
+import { getProducts } from '~/api/products';
+import { useQuery } from '@tanstack/react-query';
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: 'PrimeEmirates | Home' },
@@ -13,7 +16,23 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const HomePage = () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  try {
+    const data = await getProducts();
+    return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+const HomePage = ({ loaderData }: Route.ComponentProps) => {
+  const data = loaderData;
+  const { data: products, isLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts,
+    initialData: data,
+  });
+
   return (
     <MainLayout>
       <h1 className='text-black text-3xl font-bold md:text-4xl tracking-wide mb-10'>
@@ -26,7 +45,7 @@ const HomePage = () => {
         align={'center'}
         justify={'center'}
       >
-        {products.map((product) => (
+        {products.data.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </Grid>

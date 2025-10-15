@@ -12,8 +12,11 @@ import '@radix-ui/themes/styles.css';
 import Navbar from './components/Navbar/Navbar';
 
 import './app.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Theme } from '@radix-ui/themes';
 import Footer from './components/Footer';
+
+const queryClient = new QueryClient();
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -62,7 +65,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Outlet />;
+    </QueryClientProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

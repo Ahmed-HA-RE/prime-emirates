@@ -1,15 +1,15 @@
 import type { Route } from './+types';
-import products from '../../products.json';
-import { Link, useParams } from 'react-router';
+import { Link } from 'react-router';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Flex } from '@radix-ui/themes/components/flex';
 import { Separator } from '~/components/ui/separator';
 import Rating from '~/components/Rating';
 import { Button } from '~/components/ui/button';
+import { getProduct } from '~/api/products';
 
 export function meta({ params }: Route.MetaArgs) {
   return [
-    { title: `PrimeEmirates | ${params.id.slice(4)} Details` },
+    { title: `PrimeEmirates | ${params.productId.slice(1, 8)} Details` },
     {
       name: 'description',
       content: 'Your trusted online marketplace across the UAE.',
@@ -17,9 +17,18 @@ export function meta({ params }: Route.MetaArgs) {
   ];
 }
 
-const ProductDetailsPage = () => {
-  const { id: productId } = useParams();
-  const product = products.find((product) => product._id === productId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  try {
+    const { productId } = params;
+    const data = await getProduct(productId);
+    return data;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+const ProductDetailsPage = ({ loaderData }: Route.ComponentProps) => {
+  const product = loaderData.data;
 
   return (
     <MainLayout>
@@ -35,21 +44,21 @@ const ProductDetailsPage = () => {
         {/* Image */}
         <div className='overflow-hidden flex-1/2 max-w-lg mx-auto'>
           <img
-            src={product?.image}
-            alt={product?.name}
+            src={product.image}
+            alt={product.name}
             className=' w-full rounded-l-lg'
           />
         </div>
         {/* Info */}
         <div className='w-full  flex-1/2 '>
           <h2 className='text-2xl lg:text-3xl font-semibold tracking-wide'>
-            {product?.name}
+            {product.name}
           </h2>
           <Separator className='bg-gray-300 my-6' />
-          <Rating text={product?.numReviews!} value={product?.rating!} />
+          <Rating text={product.numReviews} value={product.rating} />
           <Separator className='bg-gray-300 my-6' />
           <p className='text-gray-500 lg:pr-2 '>
-            Description: {product?.description}
+            Description: {product.description}
           </p>
         </div>
       </Flex>
@@ -60,25 +69,23 @@ const ProductDetailsPage = () => {
           <span className=' font-medium text-lg'>Price:</span>
           <span className='text-base font-semibold dirham-symbol'>
             &#xea; {'  '}
-            <h3 className='font-sans inline-block'>{product?.price}</h3>
+            <h3 className='font-sans inline-block'>{product.price}</h3>
           </span>
         </div>
         <Separator className='bg-gray-300 my-5' />
         <div className='flex flex-row items-center justify-between px-4'>
           <span className=' font-medium text-lg'>Status:</span>
           <h3 className='text-base font-semibold'>
-            {product && product?.countInStock > 0 ? 'In Stock' : 'Out of stock'}
+            {product.countInStock > 0 ? 'In Stock' : 'Out of stock'}
           </h3>
         </div>
         <Separator className='bg-gray-300 my-5' />
         <div className='px-4'>
           <Button
             className='bg-black text-white cursor-pointer inline-block'
-            disabled={product && product?.countInStock === 0}
+            disabled={product.countInStock === 0}
           >
-            {product && product?.countInStock > 0
-              ? 'Add To Cart'
-              : 'Out of stock'}
+            {product.countInStock > 0 ? 'Add To Cart' : 'Out of stock'}
           </Button>
         </div>
       </div>

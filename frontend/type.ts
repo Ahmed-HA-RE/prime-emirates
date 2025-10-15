@@ -1,4 +1,10 @@
-export type Product = {
+type ApiResponse<T> = {
+  success: boolean;
+  count?: number;
+  data: T;
+};
+
+type Product = {
   _id: string;
   name: string;
   image: string;
@@ -10,3 +16,6 @@ export type Product = {
   rating: number;
   numReviews: number;
 };
+
+export type getProductsList = ApiResponse<Product[]>;
+export type getProductList = ApiResponse<Product>;
