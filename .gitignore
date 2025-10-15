@@ -6,3 +6,8 @@ node_modules
 .react-router
 /build/
 /frontend/app/products.json
+
+
+# Backend
+
+/backend/data
