@@ -2,7 +2,6 @@ import ProductCard from '~/components/ProductCard';
 import type { Route } from './+types';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Grid } from '@radix-ui/themes';
-import products from '../../products.json';
 import { getProducts } from '~/api/products';
 import { useQuery } from '@tanstack/react-query';
 
