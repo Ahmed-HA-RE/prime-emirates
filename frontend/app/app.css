@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: 'UAESymbol';
-  src: url('../public/uae.symbol.ttf') format('truetype');
+  src: url('../uae.symbol.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
