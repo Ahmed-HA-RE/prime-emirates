@@ -4,8 +4,11 @@ import cors from 'cors';
 import morgan from 'morgan';
 import chalk from 'chalk';
 import productsRouter from './routes/products.js';
+import connectDB from './config/database.js';
 
 dotenv.config();
+
+connectDB();
 
 const app = express();
 
