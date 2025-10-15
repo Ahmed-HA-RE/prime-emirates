@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className='w-full bg-gray-600 text-foreground py-6 mt-auto h-fit rounded-t-2xl text-white'>
+    <footer className='w-full bg-gray-600 text-foreground py-6 mt-10 h-fit rounded-t-2xl text-white '>
       <div className='max-w-6xl mx-auto flex flex-wrap justify-center gap-8'>
         <Link
           to='/'

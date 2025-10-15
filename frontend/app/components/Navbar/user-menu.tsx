@@ -88,7 +88,7 @@ export default function UserMenu() {
         <DropdownMenuSeparator className='bg-white' />
         <DropdownMenuGroup>
           {userMenuLinks.map((link) => (
-            <DropdownMenuItem>
+            <DropdownMenuItem key={link.label}>
               {link.icon}
               <span>{link.label}</span>
             </DropdownMenuItem>

@@ -16,15 +16,17 @@ export default function Navbar() {
   const id = useId();
 
   return (
-    <header className='border-b px-4 md:px-6 bg-gray-700'>
+    <header className='border-b px-4 md:px-6 py-2 bg-gray-600'>
       <div className='flex h-16 items-center justify-between gap-4 max-w-7xl mx-auto'>
         {/* Left side */}
-        <div className='flex md:flex-1/2 items-center gap-1'>
-          <div className='flex items-center gap-4'>
-            <Link to='/' className='text-white font-semibold tracking-wide'>
-              ShopEmirates
-            </Link>
-          </div>
+        <div className='flex flex-row md:flex-1/2 items-center gap-1'>
+          <img src='/assests/logo.png' alt='logo' />
+          <Link
+            to='/'
+            className='text-white font-semibold tracking-wide hidden md:block'
+          >
+            PrimeEmirates
+          </Link>
         </div>
         {/* Search form */}
         <div className='relative md:flex-1/2'>

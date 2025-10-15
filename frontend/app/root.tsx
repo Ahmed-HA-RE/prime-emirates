@@ -13,6 +13,7 @@ import Navbar from './components/Navbar/Navbar';
 
 import './app.css';
 import { Theme } from '@radix-ui/themes';
+import Footer from './components/Footer';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -54,6 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </Theme>
         <ScrollRestoration />
         <Scripts />
+        <Footer />
       </body>
     </html>
   );

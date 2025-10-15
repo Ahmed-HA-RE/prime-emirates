@@ -1,6 +1,18 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+  font-family: 'UAESymbol';
+  src: url('../public/uae.symbol.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* UAE Dirham Symbol using Unicode */
+.dirham-symbol {
+  font-family: 'UAESymbol';
+}
+
 @theme {
   --font-sans:
     'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
@@ -9,7 +21,7 @@
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950 h-screen;
+  @apply bg-white h-screen;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
