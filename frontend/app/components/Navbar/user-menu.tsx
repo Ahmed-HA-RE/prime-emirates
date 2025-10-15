@@ -7,6 +7,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router';
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
@@ -89,15 +90,17 @@ export default function UserMenu() {
         <DropdownMenuGroup>
           {userMenuLinks.map((link) => (
             <DropdownMenuItem key={link.label}>
-              {link.icon}
-              <span>{link.label}</span>
+              <Link className='flex items-center gap-2' to={link.href}>
+                {link.icon}
+                <span>{link.label}</span>
+              </Link>
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
         <DropdownMenuSeparator className='bg-white' />
 
         {/* Logout */}
-        <DropdownMenuItem>
+        <DropdownMenuItem className='cursor-pointer'>
           <LogOutIcon size={16} className='opacity-60' aria-hidden='true' />
           <span>Logout</span>
         </DropdownMenuItem>
