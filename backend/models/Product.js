@@ -1,7 +1,26 @@
 import mongoose from 'mongoose';
 
+const reviewSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    rating: { type: Number, required: true },
+    comment: { type: String, reuired: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
+  },
+  { timestamps: true }
+);
+
 const productSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
     name: {
       type: String,
       trim: true,
@@ -30,12 +49,7 @@ const productSchema = new mongoose.Schema(
       min: [0, 'The minimum count of the product in stock must be at least 0 '],
       default: 0,
     },
-    rating: {
-      type: Number,
-      min: [0, 'Rating must be at least 0'],
-      max: [5, 'Rating must not exceed 5'],
-      default: 0,
-    },
+    reviews: [reviewSchema],
     numReviews: {
       type: Number,
       min: [0, 'The minimum reviews of the product must be at least 0'],
