@@ -25,6 +25,9 @@ app.use(
 );
 app.use(morgan('dev'));
 
+app.get('/', (req, res, next) => {
+  res.status(200).json({ success: true, message: 'API is running' });
+});
 app.use('/api/products', productsRouter);
 
 app.use((req, res, next) => {

@@ -4,6 +4,7 @@ import MainLayout from '~/components/layouts/MainLayout';
 import { Grid } from '@radix-ui/themes';
 import { getProducts } from '~/api/products';
 import { useQuery } from '@tanstack/react-query';
+import { Alert, AlertTitle } from '~/components/ui/alert';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -20,16 +21,17 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     const data = await getProducts();
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    console.log(error);
+    throw new Error(error.message);
   }
 };
 
 const HomePage = ({ loaderData }: Route.ComponentProps) => {
-  const data = loaderData;
+  const initialProducts = loaderData;
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: getProducts,
-    initialData: data,
+    initialData: initialProducts,
   });
 
   return (
