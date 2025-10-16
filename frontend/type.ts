@@ -4,7 +4,7 @@ type ApiResponse<T> = {
   data: T;
 };
 
-type Product = {
+export type Product = {
   _id: string;
   name: string;
   image: string;

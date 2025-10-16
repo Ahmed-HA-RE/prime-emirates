@@ -6,6 +6,8 @@ import { Separator } from '~/components/ui/separator';
 import Rating from '~/components/Rating';
 import { Button } from '~/components/ui/button';
 import { getProduct } from '~/api/products';
+import SliderCart from '~/components/SliderCart';
+import { useState } from 'react';
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -29,18 +31,27 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
 const ProductDetailsPage = ({ loaderData }: Route.ComponentProps) => {
   const product = loaderData.data;
+  const [open, setOpen] = useState(false);
 
   return (
     <MainLayout>
-      <Link
-        className='bg-gray-200 p-3 py-2 font-semibold rounded hover:bg-gray-300 transition duration mb-6 inline-block'
-        to='/'
-      >
-        Go Back
-      </Link>
+      <Flex className='mb-6' align={'center'} justify={'between'}>
+        <Link
+          className='bg-gray-200 p-3 py-2 font-semibold rounded hover:bg-gray-300 transition duration inline-block'
+          to='/'
+        >
+          Go Back
+        </Link>
+        <Button
+          className='bg-black text-white hover:opacity-85 transition duration-200 font-bold cursor-pointer'
+          onClick={() => setOpen(!open)}
+        >
+          Purchase Options
+        </Button>
+      </Flex>
 
       {/* Product content */}
-      <Flex className='flex-col lg:flex-row lg:border rounded-l-lg border-gray-300 space-y-4 lg:space-y-0 gap-5 items-center mb-8 '>
+      <Flex className='flex-col md:flex-row md:border rounded-l-lg border-gray-300 space-y-4 md:space-y-0 gap-5 items-center mb-8 '>
         {/* Image */}
         <div className='overflow-hidden flex-1/2 max-w-lg mx-auto'>
           <img
@@ -50,45 +61,19 @@ const ProductDetailsPage = ({ loaderData }: Route.ComponentProps) => {
           />
         </div>
         {/* Info */}
-        <div className='w-full  flex-1/2 '>
+        <div className='w-full flex-1/2'>
           <h2 className='text-2xl lg:text-3xl font-semibold tracking-wide'>
             {product.name}
           </h2>
           <Separator className='bg-gray-300 my-6' />
           <Rating text={product.numReviews} value={product.rating} />
           <Separator className='bg-gray-300 my-6' />
-          <p className='text-gray-500 lg:pr-2 '>
+          <p className='text-gray-500 md:pr-2'>
             Description: {product.description}
           </p>
         </div>
       </Flex>
-
-      {/* Cart Info */}
-      <div className='shadow border border-gray-300 bg-white rounded py-6 w-full md:max-w-xs ml-auto'>
-        <div className='flex flex-row items-center justify-between px-4'>
-          <span className=' font-medium text-lg'>Price:</span>
-          <span className='text-base font-semibold dirham-symbol'>
-            &#xea; {'  '}
-            <h3 className='font-sans inline-block'>{product.price}</h3>
-          </span>
-        </div>
-        <Separator className='bg-gray-300 my-5' />
-        <div className='flex flex-row items-center justify-between px-4'>
-          <span className=' font-medium text-lg'>Status:</span>
-          <h3 className='text-base font-semibold'>
-            {product.countInStock > 0 ? 'In Stock' : 'Out of stock'}
-          </h3>
-        </div>
-        <Separator className='bg-gray-300 my-5' />
-        <div className='px-4'>
-          <Button
-            className='bg-black text-white cursor-pointer inline-block'
-            disabled={product.countInStock === 0}
-          >
-            {product.countInStock > 0 ? 'Add To Cart' : 'Out of stock'}
-          </Button>
-        </div>
-      </div>
+      <SliderCart product={product} open={open} setOpen={setOpen} />
     </MainLayout>
   );
 };
