@@ -28,16 +28,15 @@ const useCartStore = create<CartStore>()(
             );
 
             if (existedItem) {
-              return {
-                cartItems: [
-                  ...state.cartItems,
-                  {
-                    ...existedItem,
-                    price: existedItem.price * 2,
-                    quantity: existedItem.quantity + 1,
-                  },
-                ],
-              };
+              const updatedCartItems = state.cartItems.map((cartItem) =>
+                cartItem._id === item._id
+                  ? {
+                      ...cartItem,
+                      quantity: cartItem.quantity + item.quantity,
+                    }
+                  : cartItem
+              );
+              return { cartItems: updatedCartItems };
             }
             return { cartItems: [...state.cartItems, item] };
           }),
@@ -70,7 +69,18 @@ const useCartStore = create<CartStore>()(
           get().itemsPrice() + get().shippingPrice() + get().taxPrice(),
       }),
 
-      { name: 'prime-emirates-cart' }
+      {
+        name: 'prime-emirates-cart',
+        partialize: (state) => ({
+          cartItems: state.cartItems.map((item) => ({
+            _id: item._id,
+            name: item.name,
+            image: item.image,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
+      }
     )
   )
 );

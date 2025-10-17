@@ -15,6 +15,7 @@ import './app.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Theme } from '@radix-ui/themes';
 import Footer from './components/Footer';
+import { Toaster } from 'sonner';
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ScrollRestoration />
         <Scripts />
         <Footer />
+        <Toaster />
       </body>
     </html>
   );
