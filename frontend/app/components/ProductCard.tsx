@@ -11,12 +11,15 @@ import {
 } from './ui/card';
 import { Link } from 'react-router';
 import Rating from './Rating';
+import useCartStore from '~/store/cart';
 
 type ProductCardProps = {
   product: Product;
 };
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const addToCart = useCartStore((state) => state.addToCart);
+
   return (
     <div className='relative max-w-md rounded-xl pt-0 shadow-lg overflow-hidden bg-white'>
       <div className='flex h-60 items-center justify-center overflow-hidden '>
@@ -51,11 +54,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Button
             className='cursor-pointer bg-white border text-black hover:bg-black hover:text-white transition'
             size='lg'
-            disabled={product && product?.countInStock === 0}
+            disabled={product.countInStock === 0}
+            onClick={() => addToCart({ ...product, quantity: 1 })}
           >
-            {product && product?.countInStock > 0
-              ? 'Add To Cart'
-              : 'Out of stock'}
+            {product.countInStock > 0 ? 'Add To Cart' : 'Out of stock'}
           </Button>
         </CardFooter>
       </Card>

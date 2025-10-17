@@ -4,7 +4,6 @@ import MainLayout from '~/components/layouts/MainLayout';
 import { Grid } from '@radix-ui/themes';
 import { getProducts } from '~/api/products';
 import { useQuery } from '@tanstack/react-query';
-import { Alert, AlertTitle } from '~/components/ui/alert';
 
 export function meta({}: Route.MetaArgs) {
   return [

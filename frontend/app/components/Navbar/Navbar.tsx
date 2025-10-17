@@ -1,22 +1,20 @@
 import { useId } from 'react';
-import {
-  HashIcon,
-  HouseIcon,
-  SearchIcon,
-  ShoppingCart,
-  UsersRound,
-} from 'lucide-react';
+import { SearchIcon, ShoppingCartIcon } from 'lucide-react';
 
 import UserMenu from '~/components/Navbar/user-menu';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Link } from 'react-router';
+import useCartStore from '~/store/cart';
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Badge } from '../ui/badge';
 
 export default function Navbar() {
+  const cartItems = useCartStore((state) => state.cartItems);
   const id = useId();
 
   return (
-    <header className='border-b px-4 md:px-6 py-2 bg-gray-600'>
+    <header className=' px-4 md:px-6 py-2 bg-gradient-to-r from-blue-500 to-teal-400'>
       <div className='flex h-16 items-center justify-between gap-4 max-w-7xl mx-auto'>
         {/* Left side */}
         <Link to={'/'} className='flex flex-row md:flex-1/2 items-center gap-1'>
@@ -40,26 +38,20 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className='flex md:flex-1/2 items-center justify-end gap-4'>
-          <div className='flex items-center gap-2'>
-            {/* Cart */}
-            <Button
-              size='icon'
-              variant='ghost'
-              className='relative size-8 rounded-full text-muted-foreground shadow-none mt-1 md:mt-0 cursor-pointer'
-              aria-label='Open notifications'
-            >
-              <ShoppingCart
-                size={16}
-                aria-hidden='true'
-                className='text-white'
-              />
-              <span
-                aria-hidden='true'
-                className='absolute -top-1 right-2 text-lime-400 size-1 text-xs rounded-full bg-primary'
-              >
-                10
-              </span>
-            </Button>
+          {/* Cart */}
+          <div className='relative w-fit'>
+            <Link to='/cart'>
+              <Avatar className='size-9 rounded-full bg-black/40 hover:bg-black/50 transition duration-200 text-white cursor-pointer'>
+                <AvatarFallback className='rounded-sm'>
+                  <ShoppingCartIcon className='size-5' />
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+            {cartItems.length > 0 && (
+              <Badge className='absolute -top-2.5 -right-2.5 h-5 min-w-5 rounded-full px-1 tabular-nums bg-white'>
+                {cartItems.reduce((a, c) => a + c.quantity, 0)}
+              </Badge>
+            )}
           </div>
           {/* User menu */}
           <UserMenu />
