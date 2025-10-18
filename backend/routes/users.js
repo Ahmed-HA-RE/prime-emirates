@@ -9,6 +9,7 @@ import {
   registerUser,
   UpdateUser,
 } from '../controllers/users.js';
+import { authRole, protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -21,6 +22,8 @@ router.route('/login').post(loginUser); // POST api/users/login
 router.route('/logout').post(logoutUser); // POST api/users/logout
 router.route('/refresh').post(refreshToken); // POST api/users/refresh
 
+router.use(protect);
+router.use(authRole);
 router
   .route('/:userId')
   .get(getUser) // GET api/users/:userId

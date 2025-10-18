@@ -18,7 +18,7 @@ const errorHandler = async (err, req, res, next) => {
   // Jose token expired
   if (err.code === 'ERR_JWT_EXPIRED') {
     status = 401;
-    message = 'Token has expired';
+    message = 'Your session has expired. Please log in again to continue.';
   }
 
   res.status(status).json({ success: false, message });
