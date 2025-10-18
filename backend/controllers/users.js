@@ -166,3 +166,28 @@ export const refreshToken = asyncHandler(async (req, res, next) => {
     },
   });
 });
+
+// @route              GET api/users
+// @description        Get all users
+// @access             Private
+export const getUsers = asyncHandler(async (req, res, next) => {
+  res.status(200).send('Get all users as an admin role');
+});
+// @route              GET api/users/:userId
+// @description        Get single user
+// @access             Private
+export const getUser = asyncHandler(async (req, res, next) => {
+  res.status(200).send('Get user by his id as an admin role');
+});
+// @route              PUT api/users/:userId
+// @description        Update single user data
+// @access             Private
+export const UpdateUser = asyncHandler(async (req, res, next) => {
+  res.status(200).send('Update user as an admin role');
+});
+// @route              DELETE api/users/:userId
+// @description        Delete users
+// @access             Private
+export const deleteUser = asyncHandler(async (req, res, next) => {
+  res.status(200).send('Delete user as an admin role');
+});
