@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const userBaseSchema = z.object({
   name: z.string().nonempty().trim(),
@@ -13,4 +13,9 @@ export const userBaseSchema = z.object({
       error: 'Password must have at least one lowercase character.',
     }),
   role: z.enum(['user', 'admin']).prefault('user'),
+});
+
+export const userLoginSchema = userBaseSchema.pick({
+  email: true,
+  password: true,
 });

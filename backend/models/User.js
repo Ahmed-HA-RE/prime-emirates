@@ -28,4 +28,10 @@ userSchema.methods.generateToken = async function () {
   return { accessToken, refreshToken };
 };
 
+// Check if entered password match
+userSchema.methods.isPassMatched = async function (enteredPass) {
+  const isPassMatched = await bcrypt.compare(enteredPass, this.password);
+  return isPassMatched;
+};
+
 export const User = mongoose.model('user', userSchema);

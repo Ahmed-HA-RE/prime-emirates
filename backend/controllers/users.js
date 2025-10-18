@@ -1,4 +1,4 @@
-import { userBaseSchema } from '../../schema/users.js';
+import { userBaseSchema, userLoginSchema } from '../../schema/users.js';
 import { User } from '../models/User.js';
 import asyncHandler from 'express-async-handler';
 
@@ -58,4 +58,72 @@ export const registerUser = asyncHandler(async (req, res, next) => {
       role: newUser.role,
     },
   });
+});
+
+// @route              POST api/users/login
+// @description        Login user
+// @access             Public
+export const loginUser = asyncHandler(async (req, res, next) => {
+  if (!req.body || Object.keys(req.body).length === 0) {
+    const err = new Error('Please provide your credentials in order to login');
+    err.status = 400;
+    throw err;
+  }
+
+  const validateReqData = userLoginSchema.safeParse(req.body);
+  if (!validateReqData.success) {
+    const err = new Error('Invalid email or password format');
+    err.status = 400;
+    throw err;
+  }
+
+  const { email, password } = validateReqData.data;
+
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
+    const err = new Error('Invalid Credentials');
+    err.status = 400;
+    throw err;
+  }
+
+  const isPassMatched = await user.isPassMatched(password);
+
+  if (!isPassMatched) {
+    const err = new Error('Invalid Credentials');
+    err.status = 400;
+    throw err;
+  }
+
+  // Generate accessToken
+  const { accessToken } = await user.generateToken();
+
+  // Generate refreshToken and set it in httpOnlyCookie
+  const { refreshToken } = await user.generateToken();
+
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  });
+
+  res.status(201).json({
+    success: true,
+    accessToken,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
+});
+
+// @route              POST api/users/logout
+// @description        Logout user
+// @access             Private
+export const logoutUser = asyncHandler(async (req, res, next) => {
+  res.clearCookie('refreshToken');
+  res.status(201).json({ success: true });
 });
