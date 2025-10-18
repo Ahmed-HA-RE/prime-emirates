@@ -6,7 +6,7 @@ type CartStore = {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
   addToCartBtn: (item: CartItem) => void;
-  removeToCart: (_id: string) => void;
+  removeFromCart: (_id: string) => void;
   itemsPrice: () => number;
   taxPrice: () => number;
   shippingPrice: () => number;
@@ -57,7 +57,7 @@ const useCartStore = create<CartStore>()(
             }
             return { cartItems: [...state.cartItems, item] };
           }),
-        removeToCart: (_id: string) =>
+        removeFromCart: (_id: string) =>
           set((state) => {
             const filteredItems = state.cartItems.filter(
               (cartItem) => cartItem._id !== _id
