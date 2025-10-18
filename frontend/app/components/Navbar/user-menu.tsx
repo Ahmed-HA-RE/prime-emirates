@@ -67,13 +67,12 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant='ghost'
-          className='h-auto p-0 hover:bg-black/50 bg-black/40 text-white rounded-full transition cursor-pointer duration-300 font-bold'
-        >
+        <Button variant='ghost' className='h-auto p-0 hover:bg-black/50 '>
           <Avatar>
             <AvatarImage src='' alt='Profile image' />
-            <AvatarFallback className='text-base'>AH</AvatarFallback>
+            <AvatarFallback className='text-base bg-black/40 text-white'>
+              AH
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

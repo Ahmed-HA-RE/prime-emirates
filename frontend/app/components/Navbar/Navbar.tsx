@@ -41,14 +41,14 @@ export default function Navbar() {
           {/* Cart */}
           <div className='relative w-fit'>
             <Link to='/cart'>
-              <Avatar className='size-9 rounded-full bg-black/40 hover:bg-black/50 transition duration-200 text-white cursor-pointer'>
-                <AvatarFallback className='rounded-sm'>
+              <Avatar>
+                <AvatarFallback className='rounded-sm bg-black/40 hover:bg-black/50 transition duration-200 text-white'>
                   <ShoppingCartIcon className='size-5' />
                 </AvatarFallback>
               </Avatar>
             </Link>
             {cartItems.length > 0 && (
-              <Badge className='absolute -top-2.5 -right-2.5 h-5 min-w-5 rounded-full px-1 tabular-nums bg-white'>
+              <Badge className='absolute -top-2.5 -right-2.5 h-5 min-w-5 rounded-full px-1 tabular-nums bg-white text-black'>
                 {cartItems.reduce((a, c) => a + c.quantity, 0)}
               </Badge>
             )}

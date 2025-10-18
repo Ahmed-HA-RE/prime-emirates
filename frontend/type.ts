@@ -19,3 +19,10 @@ export type Product = {
 
 export type getProductsList = ApiResponse<Product[]>;
 export type getProductList = ApiResponse<Product>;
+
+export type CartItem = Pick<
+  Product,
+  '_id' | 'image' | 'name' | 'price' | 'countInStock'
+> & {
+  quantity: number;
+};

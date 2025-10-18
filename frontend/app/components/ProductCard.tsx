@@ -18,7 +18,7 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const addToCart = useCartStore((state) => state.addToCart);
+  const addToCartBtn = useCartStore((state) => state.addToCartBtn);
 
   return (
     <div className='relative max-w-md rounded-xl pt-0 shadow-lg overflow-hidden bg-white'>
@@ -52,10 +52,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           </div>
           <Button
-            className='cursor-pointer bg-white border text-black hover:bg-black hover:text-white transition'
+            className='cursor-pointer bg-white border border-black text-black hover:bg-black hover:text-white transition'
             size='lg'
             disabled={product.countInStock === 0}
-            onClick={() => addToCart({ ...product, quantity: 1 })}
+            onClick={() => addToCartBtn({ ...product, quantity: 1 })}
           >
             {product.countInStock > 0 ? 'Add To Cart' : 'Out of stock'}
           </Button>

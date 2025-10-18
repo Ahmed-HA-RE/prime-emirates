@@ -1,14 +1,11 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import type { Product } from 'type';
-
-type CartItem = Pick<Product, '_id' | 'image' | 'name' | 'price'> & {
-  quantity: number;
-};
+import type { CartItem } from 'type';
 
 type CartStore = {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
+  addToCartBtn: (item: CartItem) => void;
   removeToCart: (_id: string) => void;
   itemsPrice: () => number;
   taxPrice: () => number;
@@ -32,7 +29,27 @@ const useCartStore = create<CartStore>()(
                 cartItem._id === item._id
                   ? {
                       ...cartItem,
-                      quantity: cartItem.quantity + item.quantity,
+                      quantity: item.quantity,
+                    }
+                  : cartItem
+              );
+              return { cartItems: updatedCartItems };
+            }
+            return { cartItems: [...state.cartItems, item] };
+          }),
+
+        addToCartBtn: (item) =>
+          set((state) => {
+            const existedItem = state.cartItems.find(
+              (cartItem) => cartItem._id === item._id
+            );
+
+            if (existedItem) {
+              const updatedCartItems = state.cartItems.map((cartItem) =>
+                cartItem._id === item._id
+                  ? {
+                      ...cartItem,
+                      quantity: cartItem.quantity + 1,
                     }
                   : cartItem
               );
@@ -78,6 +95,7 @@ const useCartStore = create<CartStore>()(
             image: item.image,
             quantity: item.quantity,
             price: item.price,
+            countInStock: item.countInStock,
           })),
         }),
       }
