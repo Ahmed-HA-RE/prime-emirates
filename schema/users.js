@@ -3,7 +3,7 @@ import z from 'zod';
 export const userBaseSchema = z.object({
   name: z.string().nonempty().trim(),
   email: z.email(),
-  pasword: z
+  password: z
     .string()
     .nonempty()
     .regex(/^(?=.*[A-Z]).*$/, {
@@ -12,5 +12,5 @@ export const userBaseSchema = z.object({
     .regex(/^(?=.*[a-z]).*$/, {
       error: 'Password must have at least one lowercase character.',
     }),
-  role: z.enum(['user', 'admin']),
+  role: z.enum(['user', 'admin']).prefault('user'),
 });

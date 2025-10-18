@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import signToken from '../utils/generateJWT.js';
 
 const userSchema = new mongoose.Schema(
   {
@@ -18,5 +19,13 @@ userSchema.pre('save', async function (next) {
   const salt = 10;
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+// Generate accessToken and refreshToken
+userSchema.methods.generateToken = async function () {
+  const accessToken = await signToken(this._id.toString(), '15m');
+  const refreshToken = await signToken(this._id.toString(), '30m');
+
+  return { accessToken, refreshToken };
+};
 
 export const User = mongoose.model('user', userSchema);
