@@ -7,6 +7,7 @@ import productsRouter from './routes/products.js';
 import authRouter from './routes/users.js';
 import connectDB from './config/database.js';
 import errorHandler from './middleware/errorHandler.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: ['http://localhost:3000'],

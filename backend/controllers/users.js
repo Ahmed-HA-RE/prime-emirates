@@ -1,6 +1,8 @@
 import { userBaseSchema, userLoginSchema } from '../../schema/users.js';
 import { User } from '../models/User.js';
 import asyncHandler from 'express-async-handler';
+import * as jose from 'jose';
+import JWT_SECRET from '../utils/encodeJWT.js';
 
 // @route              POST api/users
 // @description        Register new user
@@ -126,4 +128,41 @@ export const loginUser = asyncHandler(async (req, res, next) => {
 export const logoutUser = asyncHandler(async (req, res, next) => {
   res.clearCookie('refreshToken');
   res.status(201).json({ success: true });
+});
+
+// @route              POST api/users/refresh
+// @description        Refresh user's expired token
+// @access             Private
+export const refreshToken = asyncHandler(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    const err = new Error('Not Authorized. No refresh token provided');
+    err.status = 401;
+    throw err;
+  }
+
+  const { payload } = await jose.jwtVerify(refreshToken, JWT_SECRET);
+
+  const user = await User.findById(payload._id);
+
+  if (!user) {
+    const err = new Error('No user found');
+    err.status = 404;
+    throw err;
+  }
+
+  // Generate accessToken
+  const { accessToken } = await user.generateToken();
+
+  res.status(201).json({
+    success: true,
+    accessToken,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
 });

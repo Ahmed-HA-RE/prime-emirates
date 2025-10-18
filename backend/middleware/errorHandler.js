@@ -10,6 +10,17 @@ const errorHandler = async (err, req, res, next) => {
     message = 'Resource was not found';
   }
 
+  // Jose signature verification failed
+  if (err.code === 'ERR_JWS_SIGNATURE_VERIFICATION_FAILED') {
+    status = 401;
+    message = 'Token is either invalid or has been tampered with';
+  }
+  // Jose token expired
+  if (err.code === 'ERR_JWT_EXPIRED') {
+    status = 401;
+    message = 'Token has expired';
+  }
+
   res.status(status).json({ success: false, message });
 };
 
