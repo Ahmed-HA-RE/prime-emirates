@@ -4,9 +4,10 @@ import {
   type SubmitErrorHandler,
 } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registerUser } from '~/api/users';
-import type { UserRegisterForm } from 'type';
-import { userRegisterFormSchema } from '../../../../schema/users';
+import { loginUser } from '~/api/users';
+import type { UserLoginForm } from 'type';
+import { userLoginFormSchema } from '../../../../schema/users';
+import { cn } from '~/lib/utils';
 import {
   Form,
   FormControl,
@@ -28,7 +29,7 @@ import useUserStore from '~/store/user';
 import AlertError from '~/components/AlertError';
 import { useLocation } from 'react-router';
 
-const RegisterPage = () => {
+const LoginPage = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const setUser = useUserStore((state) => state.setUser);
   const setAccessToken = useUserStore((state) => state.setAccessToken);
@@ -39,7 +40,7 @@ const RegisterPage = () => {
   const redirect = new URLSearchParams(sp).get('redirect') || '/';
 
   const { mutateAsync, isPending, isSuccess, error, isError } = useMutation({
-    mutationFn: (credentials: UserRegisterForm) => registerUser(credentials),
+    mutationFn: (credentials: UserLoginForm) => loginUser(credentials),
     onSuccess: (data) => {
       setUser({
         _id: data.user._id,
@@ -53,10 +54,9 @@ const RegisterPage = () => {
     },
   });
 
-  const form = useForm<UserRegisterForm>({
-    resolver: zodResolver(userRegisterFormSchema),
+  const form = useForm<UserLoginForm>({
+    resolver: zodResolver(userLoginFormSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: '',
     },
@@ -64,12 +64,12 @@ const RegisterPage = () => {
 
   const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
-  const onSubmit: SubmitHandler<UserRegisterForm> = async (data) => {
+  const onSubmit: SubmitHandler<UserLoginForm> = async (data) => {
     import.meta.env.DEV ? console.log(data) : null;
     await mutateAsync(data);
   };
 
-  const onError: SubmitErrorHandler<UserRegisterForm> = async (data) => {
+  const onError: SubmitErrorHandler<UserLoginForm> = async (data) => {
     import.meta.env.DEV ? console.log(data) : null;
   };
 
@@ -77,22 +77,14 @@ const RegisterPage = () => {
     <AuthLayout>
       <Form {...form}>
         <div className='space-y-3'>
-          <h2 className='font-bold text-4xl md:text-5xl text-center'>
-            Sign Up{' '}
-          </h2>
+          <h2 className='font-bold text-4xl md:text-5xl text-center'>Log In</h2>
           <p className='opacity-85 mb-5 text-base md:text-lg text-center'>
-            {' '}
-            Create your account to access all features and start your journey
-            with us.
+            Log in to view your cart and complete your orders.
           </p>
           {isSuccess ? (
             <Alert className='rounded-md border-l-6 border-green-600 bg-green-600/10 text-green-600 dark:border-green-400 dark:bg-green-400/10 dark:text-green-400  mx-auto mb-4'>
               <User />
-              <AlertTitle>
-                {redirect
-                  ? 'Redirecting back to your cart..'
-                  : 'You’re all set!.'}
-              </AlertTitle>
+              <AlertTitle>You’re all set!</AlertTitle>
             </Alert>
           ) : (
             isError && <AlertError icon={<X />} message={error.message} />
@@ -102,33 +94,6 @@ const RegisterPage = () => {
           className='space-y-4'
           onSubmit={form.handleSubmit(onSubmit, onError)}
         >
-          {/* Name */}
-          <FormField
-            control={form.control}
-            name='name'
-            render={({ field }) => (
-              <FormItem>
-                <div className='group relative w-full'>
-                  <FormLabel className='origin-start text-muted-foreground group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:text-foreground absolute top-1/2 block -translate-y-1/2 cursor-text px-2 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium'>
-                    <span
-                      className={`inline-flex px-1 ${form.formState.errors.name ? 'text-red-500' : 'text-white'} `}
-                    >
-                      Full Name
-                    </span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type='text'
-                      placeholder=' '
-                      className='bg-transparent border-white focus-visible:ring-blue-300 focus-visible:border-blue-300'
-                      {...field}
-                    />
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           {/* Email */}
           <FormField
             control={form.control}
@@ -138,7 +103,13 @@ const RegisterPage = () => {
                 <div className='group relative w-full'>
                   <FormLabel className='origin-start text-muted-foreground group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:text-foreground absolute top-1/2 block -translate-y-1/2 cursor-text px-2 text-sm transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium'>
                     <span
-                      className={`inline-flex px-1 ${form.formState.errors.email ? 'text-red-500' : 'text-white'} `}
+                      className={cn(
+                        'inline-flex',
+                        'px-1',
+                        form.formState.errors.email
+                          ? 'text-red-500'
+                          : 'text-white'
+                      )}
                     >
                       Email
                     </span>
@@ -167,12 +138,43 @@ const RegisterPage = () => {
                     <Input
                       type={isVisible ? 'text' : 'password'}
                       placeholder='Password'
-                      className={`bg-transparent border-white focus-visible:ring-blue-300 focus-visible:border-blue-300 pe-9 text-white placeholder:text-white
-                        ${form.formState.errors.password ? 'border-red-500 placeholder:text-red-500' : 'border-white placeholder:text-white'}`}
+                      className={cn(
+                        'bg-transparent',
+                        'border-white',
+                        'focus-visible:ring-blue-300',
+                        'focus-visible:border-blue-300',
+                        'pe-9',
+                        'text-white',
+                        'placeholder:text-white',
+                        form.formState.errors.password
+                          ? 'border-red-500 placeholder:text-red-500 focus-visible:ring-red-500 focus-visible:border-red-500'
+                          : 'border-white placeholder:text-white'
+                      )}
                       {...field}
                     />
                     <button
-                      className='absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 transition-[color,box-shadow] outline-none hover:text-foreground focus:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
+                      className={cn(
+                        'absolute',
+                        'inset-y-0',
+                        'end-0',
+                        'flex',
+                        'h-full',
+                        'w-9',
+                        'items-center',
+                        'justify-center',
+                        'rounded-e-md',
+
+                        'transition-[color,box-shadow]',
+                        'outline-none',
+                        'hover:text-foreground',
+                        'focus:z-10',
+                        'focus-visible:border-ring',
+                        'focus-visible:ring-[3px]',
+                        'focus-visible:ring-ring/50',
+                        'disabled:pointer-events-none',
+                        'disabled:cursor-not-allowed',
+                        'disabled:opacity-50'
+                      )}
                       type='button'
                       onClick={toggleVisibility}
                       aria-label={isVisible ? 'Hide password' : 'Show password'}
@@ -180,9 +182,21 @@ const RegisterPage = () => {
                       aria-controls='password'
                     >
                       {isVisible ? (
-                        <EyeOffIcon size={16} aria-hidden='true' color='#fff' />
+                        <EyeOffIcon
+                          size={16}
+                          aria-hidden='true'
+                          className={cn(
+                            form.formState.errors.password && 'text-red-500'
+                          )}
+                        />
                       ) : (
-                        <EyeIcon size={16} aria-hidden='true' color='#fff' />
+                        <EyeIcon
+                          size={16}
+                          aria-hidden='true'
+                          className={cn(
+                            form.formState.errors.password && 'text-red-500'
+                          )}
+                        />
                       )}
                     </button>
                   </div>
@@ -197,15 +211,15 @@ const RegisterPage = () => {
             className='w-full text-lg bg-blue-500 hover:bg-blue-600'
             disabled={isPending}
           >
-            {isPending ? <Spinner className='size-8' /> : 'Sign Up'}
+            {isPending ? <Spinner className='size-8' /> : 'Log In'}
           </Button>
           <span className='flex flex-row items-center gap-2'>
-            Already have an account?
+            New customer?
             <Link
-              className=' text-blue-500  inline-block'
-              to={redirect ? `/login?redirect=${redirect}` : '/login'}
+              className='text-blue-500 inline-block'
+              to={redirect ? `/register?redirect=${redirect}` : '/register'}
             >
-              Login
+              Register
             </Link>
           </span>
         </form>
@@ -214,4 +228,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

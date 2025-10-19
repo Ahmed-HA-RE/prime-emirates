@@ -23,7 +23,7 @@ export const registerUser = async (
 };
 
 // Login user
-export const LoginUser = async (
+export const loginUser = async (
   credentials: UserLoginForm
 ): Promise<getUser> => {
   try {

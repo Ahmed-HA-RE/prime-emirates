@@ -21,3 +21,8 @@ export const userBaseSchema = z.object({
 });
 
 export const userRegisterFormSchema = userBaseSchema.omit({ role: true });
+
+export const userLoginFormSchema = userBaseSchema.omit({
+  role: true,
+  name: true,
+});

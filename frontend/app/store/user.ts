@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 
 type UserStore = {
   accessToken: string | null;
@@ -10,23 +10,13 @@ type UserStore = {
 };
 
 const useUserStore = create<UserStore>()(
-  devtools(
-    persist(
-      (set) => ({
-        accessToken: null,
-        user: null,
-        setUser: (user) => set((state) => ({ user })),
-        setAccessToken: (accessToken) => set((state) => ({ accessToken })),
-        setLogout: () => set((state) => ({ user: null, accessToken: null })),
-      }),
-      {
-        name: 'user',
-        partialize: (state) => ({
-          user: state.user,
-        }),
-      }
-    )
-  )
+  devtools((set) => ({
+    accessToken: null,
+    user: null,
+    setUser: (user) => set((state) => ({ user })),
+    setAccessToken: (accessToken) => set((state) => ({ accessToken })),
+    setLogout: () => set((state) => ({ user: null, accessToken: null })),
+  }))
 );
 
 export default useUserStore;

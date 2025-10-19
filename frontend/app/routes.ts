@@ -5,4 +5,5 @@ export default [
   route('/product/:productId', 'routes/products/index.tsx'),
   route('/cart', 'routes/cart/index.tsx'),
   route('/register', 'routes/auth/register.tsx'),
+  route('/login', 'routes/auth/login.tsx'),
 ] satisfies RouteConfig;

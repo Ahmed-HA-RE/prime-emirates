@@ -82,7 +82,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = validateReqData.data;
 
   const user = await User.findOne({ email });
-  const isPassMatched = await user.isPassMatched(password);
+  const isPassMatched = user && (await user.isPassMatched(password));
 
   if (!user || !isPassMatched) {
     const err = new Error('Invalid Credentials');

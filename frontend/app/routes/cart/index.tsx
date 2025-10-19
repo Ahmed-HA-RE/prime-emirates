@@ -30,7 +30,9 @@ const CartPage = () => {
 
   const handleCheckOut = () => {
     if (!user) {
-      navigate('/register?redirect=shipping');
+      navigate('/login?redirect=/shipping');
+    } else {
+      navigate('/shipping');
     }
   };
 
