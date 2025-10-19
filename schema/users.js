@@ -19,3 +19,5 @@ export const userLoginSchema = userBaseSchema.pick({
   email: true,
   password: true,
 });
+
+export const userUpdateInfoSchema = userBaseSchema.partial();

@@ -1,8 +1,13 @@
-import { userBaseSchema, userLoginSchema } from '../../schema/users.js';
+import {
+  userBaseSchema,
+  userLoginSchema,
+  userUpdateInfoSchema,
+} from '../../schema/users.js';
 import { User } from '../models/User.js';
 import asyncHandler from 'express-async-handler';
 import * as jose from 'jose';
 import JWT_SECRET from '../utils/encodeJWT.js';
+import setTokenToCookie from '../utils/setCookie.js';
 
 // @route              POST api/users
 // @description        Register new user
@@ -19,7 +24,6 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   const validateReqData = userBaseSchema.safeParse(req.body);
 
   if (!validateReqData.success) {
-    console.log(validateReqData.error);
     const err = new Error('Invalid user data');
     err.status = 400;
     throw err;
@@ -43,12 +47,8 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   // Generate refreshToken and set it in httpOnlyCookie
   const { refreshToken } = await newUser.generateToken();
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  });
+  // Set token in httpOnlyCookie
+  setTokenToCookie(res, refreshToken);
 
   res.status(201).json({
     success: true,
@@ -93,15 +93,11 @@ export const loginUser = asyncHandler(async (req, res, next) => {
   // Generate accessToken
   const { accessToken } = await user.generateToken();
 
-  // Generate refreshToken and set it in httpOnlyCookie
+  // Generate refreshToken
   const { refreshToken } = await user.generateToken();
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  });
+  // Set token in httpOnlyCookie
+  setTokenToCookie(res, refreshToken);
 
   res.status(201).json({
     success: true,
@@ -151,6 +147,73 @@ export const refreshToken = asyncHandler(async (req, res, next) => {
   res.status(201).json({
     success: true,
     accessToken,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
+});
+
+// @route              GET api/users/my-profile
+// @description        Get user's profile data
+// @access             Private
+export const getMyProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    const err = new Error('No user found');
+    err.status = 404;
+    throw err;
+  }
+
+  res.status(200).json({
+    success: true,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
+});
+
+// @route              PUT api/users/my-profile
+// @description        Update user's profile data
+// @access             Private
+export const updateMyProfile = asyncHandler(async (req, res, next) => {
+  if (!req.body || Object.keys(req.body).length === 0) {
+    const err = new Error(
+      'Please provide the fields you want to update your account with'
+    );
+    err.status = 400;
+    throw err;
+  }
+
+  const user = await User.findById(req.user._id);
+
+  const validateReqData = userUpdateInfoSchema.safeParse(req.body);
+
+  if (!validateReqData.success) {
+    const err = new Error('Invalid Data Entered');
+    err.status = 400;
+    throw err;
+  }
+
+  const { email, name, password } = validateReqData.data;
+
+  user.email = email || user.email;
+  user.name = name || user.name;
+
+  if (req.body.password) {
+    user.password = password || user.password;
+  }
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
     user: {
       _id: user._id,
       name: user.name,

@@ -30,11 +30,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
 const authRole = asyncHandler(async (req, res, next) => {
   if (!req.user.role.includes('admin')) {
-    const err = new Error(
-      `This route is not allowed to be accessed by ${
-        req.user.role || 'guest'
-      } role`
-    );
+    const err = new Error('This route is only accessible by admins');
     err.status = 401;
     throw err;
   }
