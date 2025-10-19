@@ -7,10 +7,6 @@ type CartStore = {
   addToCart: (item: CartItem) => void;
   addToCartBtn: (item: CartItem) => void;
   removeFromCart: (_id: string) => void;
-  itemsPrice: () => number;
-  taxPrice: () => number;
-  shippingPrice: () => number;
-  total: () => number;
 };
 
 const useCartStore = create<CartStore>()(
@@ -65,25 +61,18 @@ const useCartStore = create<CartStore>()(
             return { cartItems: filteredItems };
           }),
 
-        // Calculate Items price
-        itemsPrice: () =>
-          get().cartItems.reduce(
-            (acc, currItems) => acc + currItems.price * currItems.quantity,
-            0
-          ),
+        // // Calculate Shipping price >100 free && <100 10 dhs
+        // shippingPrice: () => {
+        //   const price = get().itemsPrice();
+        //   return price > 100 ? 0 : 10;
+        // },
 
-        // Calculate Shipping price >100 free && <100 10 dhs
-        shippingPrice: () => {
-          const price = get().itemsPrice();
-          return price > 100 ? 0 : 10;
-        },
+        // // Calculate Tax price (5%)
+        // taxPrice: () => get().itemsPrice() * 0.05,
 
-        // Calculate Tax price (5%)
-        taxPrice: () => get().itemsPrice() * 0.05,
-
-        // Calculate Total
-        total: () =>
-          get().itemsPrice() + get().shippingPrice() + get().taxPrice(),
+        // // Calculate Total
+        // total: () =>
+        //   get().itemsPrice() + get().shippingPrice() + get().taxPrice(),
       }),
 
       {

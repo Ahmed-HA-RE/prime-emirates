@@ -7,7 +7,7 @@ type AlertErrorProps = {
 
 const AlertError = ({ icon, message }: AlertErrorProps) => {
   return (
-    <Alert className='border-destructive bg-destructive/10 text-destructive rounded-none border-0 border-l-6 max-w-sm'>
+    <Alert className='border-destructive bg-destructive/10 text-destructive rounded-none border-0 border-l-6 mb-4'>
       {icon}
       <AlertTitle>{message}</AlertTitle>
     </Alert>

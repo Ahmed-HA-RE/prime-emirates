@@ -1,8 +1,7 @@
 type ApiResponse<T> = {
   success: boolean;
   count?: number;
-  data: T;
-};
+} & T;
 
 export type Product = {
   _id: string;
@@ -25,4 +24,30 @@ export type CartItem = Pick<
   '_id' | 'image' | 'name' | 'price' | 'countInStock'
 > & {
   quantity: number;
+};
+
+export type User = {
+  accessToken: string;
+  user: {
+    _id: string;
+    email: string;
+    name: string;
+    role: string;
+  };
+};
+
+export type getUser = ApiResponse<User>;
+
+export type UserRegisterForm = Omit<
+  User['user'],
+  'role' | '_id' | 'accessToken'
+> & {
+  password: string;
+};
+
+export type UserLoginForm = Omit<
+  User['user'],
+  'role' | '_id' | 'accessToken' | 'name'
+> & {
+  password: string;
 };

@@ -2,7 +2,7 @@ import {
   userBaseSchema,
   userLoginSchema,
   userUpdateInfoSchema,
-} from '../../schema/users.js';
+} from '../../schema/users.schema.js';
 import { User } from '../models/User.js';
 import asyncHandler from 'express-async-handler';
 import * as jose from 'jose';

@@ -19,3 +19,5 @@ export const userBaseSchema = z.object({
     }),
   role: z.enum(['user', 'admin']),
 });
+
+export const userRegisterFormSchema = userBaseSchema.omit({ role: true });

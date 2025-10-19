@@ -8,13 +8,18 @@ import { SelectNative } from '~/components/ui/select-native';
 import { Button } from '~/components/ui/button';
 import type { CartItem } from 'type';
 import { Separator } from '~/components/ui/separator';
+import useUserStore from '~/store/user';
 
 const CartPage = () => {
   const navigate = useNavigate();
   const cartItems = useCartStore((state) => state.cartItems);
   const addToCart = useCartStore((state) => state.addToCart);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
-  const itemsPrice = useCartStore((state) => state.itemsPrice());
+  const user = useUserStore((state) => state.user);
+  const totalItemsPrice = cartItems.reduce(
+    (acc, currItems) => acc + currItems.price * currItems.quantity,
+    0
+  );
 
   const handleAddToCart = (value: number, item: CartItem) => {
     addToCart({ ...item, quantity: value });
@@ -24,7 +29,9 @@ const CartPage = () => {
   };
 
   const handleCheckOut = () => {
-    navigate('/login?redirect=shipping');
+    if (!user) {
+      navigate('/register?redirect=shipping');
+    }
   };
 
   return (
@@ -123,15 +130,21 @@ const CartPage = () => {
           </h1>
           <div className='flex flex-row items-center gap-1'>
             <span className='text-lg dirham-symbol'>&#xea; {'  '}</span>
-            <p className='font-sans inline-block'>{itemsPrice.toFixed(2)}</p>
+            <p className='font-sans inline-block'>
+              {totalItemsPrice.toFixed(2)}
+            </p>
           </div>
-          <Separator className='my-5 bg-gray-300' />
-          <Button
-            className='py-6 text-base cursor-pointer hover:opacity-95'
-            onClick={handleCheckOut}
-          >
-            Proceed To Checkout
-          </Button>
+          {cartItems.length !== 0 && (
+            <>
+              <Separator className='my-5 bg-gray-300' />
+              <Button
+                className='py-6 text-base cursor-pointer hover:opacity-95'
+                onClick={handleCheckOut}
+              >
+                Proceed To Checkout
+              </Button>
+            </>
+          )}
         </div>
       </Flex>
     </MainLayout>

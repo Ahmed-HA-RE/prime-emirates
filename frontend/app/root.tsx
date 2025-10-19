@@ -56,10 +56,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Theme>
           <Navbar />
           {children}
+          <Footer />
         </Theme>
         <ScrollRestoration />
         <Scripts />
-        <Footer />
         <Toaster />
       </body>
     </html>
