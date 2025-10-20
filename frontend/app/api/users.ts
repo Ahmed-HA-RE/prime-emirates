@@ -1,5 +1,5 @@
 import { api } from '~/lib/axios';
-import type { UserRegisterForm, UserLoginForm, getUser } from 'type';
+import type { UserRegisterForm, UserLoginForm, getUser, User } from 'type';
 import axios from 'axios';
 
 // Register user
@@ -52,6 +52,28 @@ export const logout = async () => {
         withCredentials: true,
       }
     );
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+// Refresh accessToken
+export const refreshToken = async (): Promise<User> => {
+  try {
+    const { data } = await api.post(
+      '/users/refresh',
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    return data;
   } catch (error) {
     let message = 'Something went wrong';
 

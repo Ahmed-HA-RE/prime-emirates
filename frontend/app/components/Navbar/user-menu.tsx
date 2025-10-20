@@ -1,6 +1,8 @@
 import { PackageSearch, LogOutIcon, User, Truck, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { logout } from '~/api/users';
+import { useMutation } from '@tanstack/react-query';
+import { Spinner } from '../ui/spinner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
@@ -14,15 +16,20 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import useUserStore from '~/store/user';
-
-type User = {
-  role: string;
-};
+import useCartStore from '~/store/cart';
 
 export default function UserMenu() {
   const user = useUserStore((state) => state.user);
   const setLogout = useUserStore((state) => state.setLogout);
+  const clearCart = useCartStore((state) => state.clearCart);
   const navigate = useNavigate();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      navigate('/login');
+    },
+  });
 
   const isAdmin =
     user && user.role == 'admin'
@@ -61,9 +68,9 @@ export default function UserMenu() {
   ];
 
   const handleLogout = async () => {
-    await logout();
+    await mutateAsync();
     setLogout();
-    navigate('/');
+    clearCart();
   };
 
   return !user ? (
@@ -73,6 +80,8 @@ export default function UserMenu() {
     >
       <Link to='/register'>Get Started</Link>
     </Button>
+  ) : isPending ? (
+    <Spinner className='text-cyan-700 size-9 mx-auto' />
   ) : (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -111,9 +120,12 @@ export default function UserMenu() {
         <DropdownMenuSeparator className='bg-white' />
 
         {/* Logout */}
-        <DropdownMenuItem className='cursor-pointer text-white hover:text-black'>
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className='cursor-pointer text-white hover:text-black'
+        >
           <LogOutIcon size={16} className='opacity-85' aria-hidden='true' />
-          <span onClick={handleLogout}>Logout</span>
+          <span>Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -7,12 +7,13 @@ type CartStore = {
   addToCart: (item: CartItem) => void;
   addToCartBtn: (item: CartItem) => void;
   removeFromCart: (_id: string) => void;
+  clearCart: () => void;
 };
 
 const useCartStore = create<CartStore>()(
   devtools(
     persist(
-      (set, get) => ({
+      (set) => ({
         cartItems: [],
         addToCart: (item) =>
           set((state) => {
@@ -60,6 +61,7 @@ const useCartStore = create<CartStore>()(
             );
             return { cartItems: filteredItems };
           }),
+        clearCart: () => set((state) => ({ cartItems: [] })),
 
         // // Calculate Shipping price >100 free && <100 10 dhs
         // shippingPrice: () => {

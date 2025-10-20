@@ -43,6 +43,7 @@ export type UserRegisterForm = Omit<
   'role' | '_id' | 'accessToken'
 > & {
   password: string;
+  confirmPassword: string;
 };
 
 export type UserLoginForm = Omit<

@@ -192,6 +192,42 @@ const RegisterPage = () => {
             )}
           />
 
+          {/* Confirm Password */}
+          <FormField
+            control={form.control}
+            name='confirmPassword'
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className='relative'>
+                    <Input
+                      type={isVisible ? 'text' : 'password'}
+                      placeholder='Confirm Password'
+                      className={`bg-transparent border-white focus-visible:ring-blue-300 focus-visible:border-blue-300 pe-9 text-white placeholder:text-white
+                        ${form.formState.errors.confirmPassword ? 'border-red-500 placeholder:text-red-500' : 'border-white placeholder:text-white'}`}
+                      {...field}
+                    />
+                    <button
+                      className='absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 transition-[color,box-shadow] outline-none hover:text-foreground focus:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
+                      type='button'
+                      onClick={toggleVisibility}
+                      aria-label={isVisible ? 'Hide password' : 'Show password'}
+                      aria-pressed={isVisible}
+                      aria-controls='password'
+                    >
+                      {isVisible ? (
+                        <EyeOffIcon size={16} aria-hidden='true' color='#fff' />
+                      ) : (
+                        <EyeIcon size={16} aria-hidden='true' color='#fff' />
+                      )}
+                    </button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button
             size='lg'
             className='w-full text-lg bg-blue-500 hover:bg-blue-600'

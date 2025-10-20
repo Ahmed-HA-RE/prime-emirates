@@ -16,6 +16,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Theme } from '@radix-ui/themes';
 import Footer from './components/Footer';
 import { Toaster } from 'sonner';
+import { refreshToken } from './api/users';
+import { useEffect } from 'react';
+import useUserStore from './store/user';
+import type { User } from 'type';
+import axios from 'axios';
 
 const queryClient = new QueryClient();
 
@@ -53,11 +58,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Theme>
-          <Navbar />
-          {children}
-          <Footer />
-        </Theme>
+        <QueryClientProvider client={queryClient}>
+          <Theme>
+            <Navbar />
+            {children}
+            <Footer />
+          </Theme>
+        </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
         <Toaster />
@@ -67,11 +74,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
-  );
+  const setUser = useUserStore((state) => state.setUser);
+  const setAccessToken = useUserStore((state) => state.setAccessToken);
+  useEffect(() => {
+    const refreshInvalidToken = async () => {
+      try {
+        const data = await refreshToken();
+        setUser(data.user);
+        setAccessToken(data.accessToken);
+      } catch (error) {
+        if (import.meta.env.DEV) {
+          console.log(error);
+        }
+      }
+    };
+    refreshInvalidToken();
+  }, []);
+
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
