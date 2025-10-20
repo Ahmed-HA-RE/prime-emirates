@@ -12,6 +12,7 @@ import {
 import { Button } from '~/components/ui/button';
 import ShippingForm from '~/components/ShippingForm';
 import { cn } from '~/lib/utils';
+import PaymentForm from '~/components/PaymentForm';
 
 const steps = [
   {
@@ -61,7 +62,10 @@ const CheckoutPage = () => {
             ))}
           </Stepper>
         </div>
+
         {currentStep === 1 && <ShippingForm />}
+        {currentStep === 2 && <PaymentForm />}
+
         <div className='flex  space-x-4'>
           <Button
             variant='outline'
@@ -78,14 +82,16 @@ const CheckoutPage = () => {
           >
             Prev step
           </Button>
-          <Button
-            variant='outline'
-            className='w-32 text-white hover:text-white bg-blue-500 hover:bg-blue-600'
-            onClick={() => setCurrentStep((prev) => prev + 1)}
-            disabled={currentStep > steps.length - 1}
-          >
-            Next Step
-          </Button>
+
+          {currentStep > steps.length - 1 ? null : (
+            <Button
+              variant='outline'
+              className='w-32 text-white hover:text-white bg-blue-500 hover:bg-blue-600'
+              onClick={() => setCurrentStep((prev) => prev + 1)}
+            >
+              Next Step
+            </Button>
+          )}
         </div>
       </div>
     </main>
