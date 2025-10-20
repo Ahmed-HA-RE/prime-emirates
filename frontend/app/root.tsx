@@ -59,11 +59,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <Theme>
-            <Navbar />
-            {children}
-            <Footer />
-          </Theme>
+          <div className='flex flex-col min-h-screen'>
+            <Theme>
+              <Navbar />
+              {children}
+              <Footer />
+            </Theme>
+          </div>
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />

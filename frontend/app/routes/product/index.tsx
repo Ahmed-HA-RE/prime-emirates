@@ -30,7 +30,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 const ProductDetailsPage = ({ loaderData }: Route.ComponentProps) => {
-  const product = loaderData.data;
+  const product = loaderData;
   const [open, setOpen] = useState(false);
 
   return (

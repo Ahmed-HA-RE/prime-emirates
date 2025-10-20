@@ -84,3 +84,21 @@ export const refreshToken = async (): Promise<User> => {
     throw new Error(message);
   }
 };
+
+// Get user's profile data
+export const getUserProfile = async (): Promise<User> => {
+  try {
+    const { data } = await api.get('/users/my-profile', {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};

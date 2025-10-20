@@ -1,6 +1,6 @@
 import { PackageSearch, LogOutIcon, User, Truck, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
-import { logout } from '~/api/users';
+import { getUserProfile, logout } from '~/api/users';
 import { useMutation } from '@tanstack/react-query';
 import { Spinner } from '../ui/spinner';
 
@@ -17,12 +17,19 @@ import {
 } from '~/components/ui/dropdown-menu';
 import useUserStore from '~/store/user';
 import useCartStore from '~/store/cart';
+import { useQuery } from '@tanstack/react-query';
 
 export default function UserMenu() {
-  const user = useUserStore((state) => state.user);
   const setLogout = useUserStore((state) => state.setLogout);
   const clearCart = useCartStore((state) => state.clearCart);
+  const accessToken = useUserStore((state) => state.accessToken);
   const navigate = useNavigate();
+
+  const { data } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUserProfile,
+    enabled: !!accessToken,
+  });
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: logout,
@@ -32,7 +39,7 @@ export default function UserMenu() {
   });
 
   const isAdmin =
-    user && user.role == 'admin'
+    data?.user && data.user.role == 'admin'
       ? [
           {
             href: '/products',
@@ -73,23 +80,29 @@ export default function UserMenu() {
     clearCart();
   };
 
-  return !user ? (
-    <Button
-      asChild
-      className='from-primary via-primary/60 to-primary bg-transparent bg-gradient-to-r [background-size:200%_auto] hover:bg-transparent hover:bg-[99%_center]'
-    >
-      <Link to='/register'>Get Started</Link>
-    </Button>
-  ) : isPending ? (
-    <Spinner className='text-cyan-700 size-9 mx-auto' />
-  ) : (
+  if (isPending) {
+    return <Spinner className='text-cyan-700 size-9 mx-auto' />;
+  }
+
+  if (!accessToken) {
+    return (
+      <Button
+        asChild
+        className='from-primary via-primary/60 to-primary bg-transparent bg-gradient-to-r [background-size:200%_auto] hover:bg-transparent hover:bg-[99%_center]'
+      >
+        <Link to='/register'>Get Started</Link>
+      </Button>
+    );
+  }
+
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='h-auto p-0 hover:bg-black/50 '>
           <Avatar>
             <AvatarImage src='' alt='Profile image' />
             <AvatarFallback className='text-base bg-black/40 text-white'>
-              {user.name.slice(0, 2).toUpperCase()}
+              {data?.user.name.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -97,10 +110,10 @@ export default function UserMenu() {
       <DropdownMenuContent className='max-w-64 bg-gray-700' align='end'>
         <DropdownMenuLabel className='flex min-w-0 flex-col'>
           <span className='truncate text-sm font-medium text-white'>
-            {user.name}
+            {data?.user.name}
           </span>
           <span className='truncate text-xs font-normal text-white'>
-            {user.email}
+            {data?.user.email}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className='bg-white' />

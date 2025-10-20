@@ -52,3 +52,10 @@ export type UserLoginForm = Omit<
 > & {
   password: string;
 };
+
+export type Shipping = {
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+};
