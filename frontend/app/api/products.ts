@@ -1,9 +1,9 @@
 import { api } from '~/lib/axios';
-import type { getProductList, getProductsList } from 'type';
+import type { Product } from 'type';
 import axios from 'axios';
 
 // Fetch all products
-export const getProducts = async (): Promise<getProductsList> => {
+export const getProducts = async (): Promise<Product[]> => {
   try {
     const { data } = await api.get('/products');
     return data;
@@ -19,9 +19,7 @@ export const getProducts = async (): Promise<getProductsList> => {
 };
 
 // Fetch single product
-export const getProduct = async (
-  productId: string
-): Promise<getProductList> => {
+export const getProduct = async (productId: string): Promise<Product> => {
   try {
     const { data } = await api.get(`/products/${productId}`);
     return data;

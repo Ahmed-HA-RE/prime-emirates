@@ -63,8 +63,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Theme>
               <Navbar />
               {children}
-              <Footer />
             </Theme>
+            <Footer />
           </div>
         </QueryClientProvider>
         <ScrollRestoration />

@@ -45,7 +45,7 @@ const HomePage = ({ loaderData }: Route.ComponentProps) => {
         align={'center'}
         justify={'center'}
       >
-        {products.data.map((product) => (
+        {products.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </Grid>

@@ -22,7 +22,7 @@ userSchema.pre('save', async function (next) {
 
 // Generate accessToken and refreshToken
 userSchema.methods.generateToken = async function () {
-  const accessToken = await signToken(this._id.toString(), '15m');
+  const accessToken = await signToken(this._id.toString(), '1s');
   const refreshToken = await signToken(this._id.toString(), '30d');
 
   return { accessToken, refreshToken };

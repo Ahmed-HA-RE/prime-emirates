@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 export function meta({ params }: Route.MetaArgs) {
   return [
-    { title: `PrimeEmirates | ${params.productId.slice(1, 8)} Details` },
+    { title: 'PrimeEmirates' },
     {
       name: 'description',
       content: 'Your trusted online marketplace across the UAE.',
@@ -31,6 +31,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
 const ProductDetailsPage = ({ loaderData }: Route.ComponentProps) => {
   const product = loaderData;
+
   const [open, setOpen] = useState(false);
 
   return (

@@ -68,7 +68,7 @@ const PurchasePanel = ({ product, open, setOpen }: PurchasePanelProps) => {
           <div className='flex flex-row items-center justify-between px-4'>
             <span className=' font-medium text-lg text-black'>Price:</span>
             <span className='text-base font-semibold dirham-symbol text-black'>
-              &#xea; {'  '}
+              &#xea;
               <h3 className='font-sans inline-block text-black'>
                 {product.price}
               </h3>

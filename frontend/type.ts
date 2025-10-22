@@ -1,8 +1,3 @@
-type ApiResponse<T> = {
-  success: boolean;
-  count?: number;
-} & T;
-
 export type Product = {
   _id: string;
   name: string;
@@ -15,9 +10,6 @@ export type Product = {
   rating: number;
   numReviews: number;
 };
-
-export type getProductsList = ApiResponse<Product[]>;
-export type getProductList = ApiResponse<Product>;
 
 export type CartItem = Pick<
   Product,
@@ -35,8 +27,6 @@ export type User = {
     role: string;
   };
 };
-
-export type getUser = ApiResponse<User>;
 
 export type UserRegisterForm = Omit<
   User['user'],
@@ -59,3 +49,41 @@ export type Shipping = {
   postalCode: string;
   country: string;
 };
+
+export type Order = {
+  user: string;
+  orderItems: {
+    name: string;
+    price: number;
+    qty: number;
+    image: string;
+    product: string;
+  }[];
+
+  shipping: {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
+  paymentMethod: string;
+  paymentResults: {
+    id: string;
+    status: string;
+    update_time: string;
+    email_address: string;
+  };
+
+  itemsPrice: number;
+  taxPrice: number;
+  shippingPrice: number;
+  totalPrice: number;
+  isPaid: boolean;
+  isDelivered: boolean;
+  deliveredAt: string;
+};
+
+export type PlaceOrder = Omit<
+  Order,
+  'paymentResults' | 'isPaid' | 'isDelivered' | 'deliveredAt' | 'user'
+>;

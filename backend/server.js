@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import chalk from 'chalk';
 import productsRouter from './routes/products.js';
 import authRouter from './routes/users.js';
+import ordersRouter from './routes/orders.js';
 import connectDB from './config/database.js';
 import errorHandler from './middleware/errorHandler.js';
 import cookieParser from 'cookie-parser';
@@ -34,6 +35,7 @@ app.get('/', (req, res, next) => {
 });
 app.use('/api/products', productsRouter);
 app.use('/api/users', authRouter);
+app.use('/api/orders', ordersRouter);
 
 app.use((req, res, next) => {
   const err = new Error("Sorry, we couldn't find what you were looking for.");

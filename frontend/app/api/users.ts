@@ -1,11 +1,11 @@
 import { api } from '~/lib/axios';
-import type { UserRegisterForm, UserLoginForm, getUser, User } from 'type';
+import type { UserRegisterForm, UserLoginForm, User } from 'type';
 import axios from 'axios';
 
 // Register user
 export const registerUser = async (
   credentials: UserRegisterForm
-): Promise<getUser> => {
+): Promise<User> => {
   try {
     const { data } = await api.post('/users', credentials, {
       withCredentials: true,
@@ -23,9 +23,7 @@ export const registerUser = async (
 };
 
 // Login user
-export const loginUser = async (
-  credentials: UserLoginForm
-): Promise<getUser> => {
+export const loginUser = async (credentials: UserLoginForm): Promise<User> => {
   try {
     const { data } = await api.post('/users/login', credentials, {
       withCredentials: true,

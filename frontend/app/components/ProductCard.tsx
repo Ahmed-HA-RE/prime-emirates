@@ -47,7 +47,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <div className='flex flex-col'>
             <span className='text-sm font-medium uppercase'>Price</span>
             <span className='text-xl font-semibold dirham-symbol'>
-              &#xea; {'  '}
+              &#xea;
               <h3 className='font-sans inline-block'>{product.price}</h3>
             </span>
           </div>

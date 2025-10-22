@@ -13,9 +13,7 @@ export const getProducts = asyncHandler(async (req, res, next) => {
     throw err;
   }
 
-  res
-    .status(200)
-    .json({ success: true, count: products.length, data: products });
+  res.status(200).json(products);
 });
 
 // @route             GET /api/products/:productId
@@ -32,5 +30,5 @@ export const getProductById = asyncHandler(async (req, res, next) => {
     throw err;
   }
 
-  res.status(200).json({ success: true, data: product });
+  res.status(200).json(product);
 });

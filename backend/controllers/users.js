@@ -51,7 +51,6 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   setTokenToCookie(res, refreshToken);
 
   res.status(201).json({
-    success: true,
     accessToken,
     user: {
       _id: newUser._id,
@@ -100,7 +99,6 @@ export const loginUser = asyncHandler(async (req, res, next) => {
   setTokenToCookie(res, refreshToken);
 
   res.status(201).json({
-    success: true,
     accessToken,
     user: {
       _id: user._id,
@@ -145,7 +143,6 @@ export const refreshToken = asyncHandler(async (req, res, next) => {
   const { accessToken } = await user.generateToken();
 
   res.status(201).json({
-    success: true,
     accessToken,
     user: {
       _id: user._id,
@@ -169,7 +166,6 @@ export const getMyProfile = asyncHandler(async (req, res, next) => {
   }
 
   res.status(200).json({
-    success: true,
     user: {
       _id: user._id,
       name: user.name,
@@ -213,7 +209,6 @@ export const updateMyProfile = asyncHandler(async (req, res, next) => {
   await user.save();
 
   res.status(200).json({
-    success: true,
     user: {
       _id: user._id,
       name: user.name,

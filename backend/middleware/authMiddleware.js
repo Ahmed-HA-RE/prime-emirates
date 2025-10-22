@@ -34,6 +34,7 @@ const authRole = asyncHandler(async (req, res, next) => {
     err.status = 401;
     throw err;
   }
+  next();
 });
 
 export { protect, authRole };
