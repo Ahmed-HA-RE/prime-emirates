@@ -51,7 +51,12 @@ export type Shipping = {
 };
 
 export type Order = {
-  user: string;
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+  };
   orderItems: {
     name: string;
     price: number;
@@ -85,5 +90,5 @@ export type Order = {
 
 export type PlaceOrder = Omit<
   Order,
-  'paymentResults' | 'isPaid' | 'isDelivered' | 'deliveredAt' | 'user'
+  'paymentResults' | 'isPaid' | 'isDelivered' | 'deliveredAt' | 'user' | '_id'
 >;

@@ -43,7 +43,6 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const setPayment = usePaymentStore((state) => state.setPayment);
   const shipping = useShippingStore((state) => state.shipping);
-  const cartItems = useCartStore((state) => state.cartItems);
 
   const navigate = useNavigate();
 

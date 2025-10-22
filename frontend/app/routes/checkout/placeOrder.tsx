@@ -1,3 +1,4 @@
+import type { Route } from './+types/placeOrder';
 import { Flex } from '@radix-ui/themes';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Spinner } from '~/components/ScreenSpinner';
@@ -10,10 +11,16 @@ import usePaymentStore from '~/store/payment';
 import useCartStore from '~/store/cart';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { TriangleAlertIcon } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
+import { Link, redirect, useNavigate } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { calculateOrderSummary } from '~/utils/calcOrderSummary';
 import { toast } from 'sonner';
+
+export const loader = ({ request }: Route.LoaderArgs) => {
+  const refreshToken = request.headers.get('Cookie');
+
+  if (!refreshToken) return redirect('/login');
+};
 
 const PlaceOrderPage = () => {
   const shipping = useShippingStore((state) => state.shipping);
@@ -25,7 +32,7 @@ const PlaceOrderPage = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (orderItems: PlaceOrder) => createOrders(orderItems),
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Order Placed!', {
         style: {
           '--normal-bg':
@@ -36,6 +43,7 @@ const PlaceOrderPage = () => {
         } as React.CSSProperties,
         position: 'top-center',
       });
+      navigate(`/order/${data._id}`);
     },
   });
 
@@ -64,7 +72,7 @@ const PlaceOrderPage = () => {
       {isPending && <Spinner />}
       <Flex className='flex-col-reverse md:flex-row items-start gap-y-15 md:gap-x-10'>
         {/* Left Col */}
-        <div className='flex-1/2'>
+        <div className='flex-1/2 w-full'>
           {/* Shipping */}
           <div>
             <h2 className='text-3xl md:text-4xl font-bold mb-4'>Shipping</h2>
@@ -93,7 +101,7 @@ const PlaceOrderPage = () => {
           <Separator className='my-6 bg-gray-400 ' />
 
           {cartItems.length === 0 ? (
-            <Alert className='bg-destructive dark:bg-destructive/60 border-none text-white'>
+            <Alert className='bg-destructive dark:bg-destructive/60 border-none text-white max-w-lg'>
               <TriangleAlertIcon />
               <AlertTitle>Your cart is empty</AlertTitle>
               <AlertDescription className='text-white/80'>

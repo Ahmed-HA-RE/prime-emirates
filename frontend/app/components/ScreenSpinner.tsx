@@ -4,7 +4,7 @@ import { cn } from '~/lib/utils';
 
 function Spinner({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
-    <div className='bg-black/20 absolute inset-0 flex  pt-30 justify-center z-20'>
+    <div className='bg-white/30 fixed inset-0 h-full flex items-center justify-center z-20'>
       <LoaderCircle
         role='status'
         strokeWidth={0.75}

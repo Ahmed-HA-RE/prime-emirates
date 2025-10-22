@@ -72,7 +72,10 @@ export const createOrders = asyncHandler(async (req, res, next) => {
 // @description       Create single order
 // @access            Private/Admin/User
 export const getOrder = asyncHandler(async (req, res, next) => {
-  const order = await Order.findById(req.params.id);
+  const order = await Order.findById(req.params.id).populate({
+    path: 'user',
+    select: 'name email _id',
+  });
 
   if (!order) {
     const err = new Error('No order found');
