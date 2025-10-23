@@ -62,19 +62,6 @@ const useCartStore = create<CartStore>()(
             return { cartItems: filteredItems };
           }),
         clearCart: () => set((state) => ({ cartItems: [] })),
-
-        // // Calculate Shipping price >100 free && <100 10 dhs
-        // shippingPrice: () => {
-        //   const price = get().itemsPrice();
-        //   return price > 100 ? 0 : 10;
-        // },
-
-        // // Calculate Tax price (5%)
-        // taxPrice: () => get().itemsPrice() * 0.05,
-
-        // // Calculate Total
-        // total: () =>
-        //   get().itemsPrice() + get().shippingPrice() + get().taxPrice(),
       }),
 
       {

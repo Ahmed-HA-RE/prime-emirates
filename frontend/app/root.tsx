@@ -12,15 +12,19 @@ import '@radix-ui/themes/styles.css';
 import Navbar from './components/Navbar/Navbar';
 
 import './app.css';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query';
 import { Theme } from '@radix-ui/themes';
 import Footer from './components/Footer';
 import { Toaster } from 'sonner';
 import { refreshToken } from './api/users';
 import { useEffect } from 'react';
 import useUserStore from './store/user';
-import type { User } from 'type';
-import axios from 'axios';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { getPaypalClientId } from './api/paypal';
 
 const queryClient = new QueryClient();
 
@@ -47,6 +51,11 @@ export const links: Route.LinksFunction = () => [
     href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
   },
 ];
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const clientId = await getPaypalClientId();
+  return clientId;
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -75,7 +84,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+export default function App({ loaderData }: Route.ComponentProps) {
   const setUser = useUserStore((state) => state.setUser);
   const setAccessToken = useUserStore((state) => state.setAccessToken);
   useEffect(() => {
@@ -93,7 +102,13 @@ export default function App() {
     refreshInvalidToken();
   }, []);
 
-  return <Outlet />;
+  return (
+    <PayPalScriptProvider
+      options={{ currency: 'USD', clientId: loaderData.clientId }}
+    >
+      <Outlet />
+    </PayPalScriptProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

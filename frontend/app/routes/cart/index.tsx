@@ -30,7 +30,7 @@ const CartPage = () => {
 
   const handleCheckOut = () => {
     if (!user) {
-      navigate('/login?redirect=checkout/shipping');
+      navigate('/login?redirect=/checkout/shipping');
     } else {
       navigate('/checkout/shipping');
     }

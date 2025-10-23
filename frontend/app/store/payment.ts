@@ -10,7 +10,7 @@ const usePaymentStore = create<PaymentStore>()(
   devtools(
     persist(
       (set) => ({
-        payment: 'PayPal',
+        payment: '',
         setPayment: (payment) => set((state) => ({ payment })),
       }),
       { name: 'payment' }

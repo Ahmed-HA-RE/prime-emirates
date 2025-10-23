@@ -17,12 +17,11 @@ import CheckoutLayout from '~/components/layouts/CheckoutLayout';
 import { Button } from '~/components/ui/button';
 import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
-import { FaPaypal } from 'react-icons/fa6';
+import { FaCreditCard, FaPaypal } from 'react-icons/fa6';
 import usePaymentStore from '~/store/payment';
 import useShippingStore from '~/store/shipping';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
-import useCartStore from '~/store/cart';
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const isUser = request.headers.get('Cookie');
@@ -90,7 +89,6 @@ const PaymentPage = () => {
           className='space-y-4'
           onSubmit={form.handleSubmit(onSubmit, onError)}
         >
-          {/* PayPal */}
           <FormField
             control={form.control}
             name='payment'
@@ -120,11 +118,31 @@ const PaymentPage = () => {
                         PayPal
                       </label>
                     </div>
+
+                    <div className='relative flex cursor-pointer flex-col items-center gap-3 rounded-md border border-input px-2 py-3 text-center shadow-xs transition-[color,box-shadow] outline-none has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50 has-data-[state=checked]:border-primary/50'>
+                      <RadioGroupItem
+                        id={'credit'}
+                        className='sr-only'
+                        value='credit'
+                      />
+                      <FaCreditCard
+                        className='opacity-60'
+                        size={20}
+                        aria-hidden='true'
+                      />
+                      <label
+                        htmlFor={'credit'}
+                        className='cursor-pointer text-xs leading-none font-medium text-foreground after:absolute after:inset-0'
+                      >
+                        Credit Card
+                      </label>
+                    </div>
                   </RadioGroup>
                 </FormControl>
               </FormItem>
             )}
           />
+
           <div className='space-x-3 mt-8'>
             <Button
               size={'lg'}

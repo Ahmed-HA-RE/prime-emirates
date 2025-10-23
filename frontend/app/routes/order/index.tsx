@@ -3,12 +3,21 @@ import type { Route } from './+types';
 import { Spinner } from '~/components/ScreenSpinner';
 import { useQuery } from '@tanstack/react-query';
 import { getOrder } from '~/api/orders';
-import { Button, Flex } from '@radix-ui/themes';
+import { Flex } from '@radix-ui/themes';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Alert, AlertTitle } from '~/components/ui/alert';
 import { Truck, X } from 'lucide-react';
 import { FaMoneyCheck } from 'react-icons/fa6';
 import { Separator } from '~/components/ui/separator';
+import {
+  PayPalButtons,
+  type PayPalButtonsComponentProps,
+} from '@paypal/react-paypal-js';
+import { useMutation } from '@tanstack/react-query';
+import { updateOrderToPaid } from '~/api/orders';
+import type { PayPalDetailsRes } from 'type';
+import { toast } from 'sonner';
+import useCartStore from '~/store/cart';
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
@@ -17,12 +26,85 @@ export const loader = ({ request }: Route.LoaderArgs) => {
 
 const OrderPage = () => {
   const { id } = useParams();
+  const setClearCart = useCartStore((state) => state.clearCart);
 
-  const { data: order, isLoading } = useQuery({
+  const {
+    data: order,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['order'],
     queryFn: () => getOrder(id),
-    staleTime: 1000,
+    staleTime: 5000,
   });
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (details: PayPalDetailsRes) =>
+      updateOrderToPaid(order?._id, details),
+
+    onSuccess: () => {
+      toast.success('Order paid successfully!', {
+        style: {
+          '--normal-bg':
+            'light-dark(var(--color-green-600), var(--color-green-400))',
+          '--normal-text': 'var(--color-white)',
+          '--normal-border':
+            'light-dark(var(--color-green-600), var(--color-green-400))',
+        } as React.CSSProperties,
+        position: 'top-center',
+      });
+      setClearCart();
+      refetch();
+    },
+
+    onError: (err) => {
+      toast.error(err.message, {
+        style: {
+          '--normal-bg':
+            'light-dark(var(--destructive), color-mix(in oklab, var(--destructive) 60%, var(--background)))',
+          '--normal-text': 'var(--color-white)',
+          '--normal-border': 'transparent',
+        } as React.CSSProperties,
+      });
+    },
+  });
+
+  const onApprove: PayPalButtonsComponentProps['onApprove'] = async (
+    data,
+    actions
+  ) => {
+    if (!actions) {
+      return;
+    }
+    const details = await actions.order?.capture();
+    if (!details) {
+      return;
+    }
+    await mutateAsync({
+      email_address:
+        details.payment_source?.paypal?.email_address || 'no-email',
+      id: details.id,
+      status: details.status,
+      update_time: details.update_time,
+    });
+  };
+
+  const createOrder: PayPalButtonsComponentProps['createOrder'] = async (
+    data,
+    actions
+  ) => {
+    return actions.order.create({
+      intent: 'CAPTURE',
+      purchase_units: [
+        {
+          amount: {
+            currency_code: 'USD',
+            value: order?.totalPrice.toFixed(2)!,
+          },
+        },
+      ],
+    });
+  };
 
   return (
     <MainLayout>
@@ -91,7 +173,9 @@ const OrderPage = () => {
                   {order?.isPaid ? (
                     <Alert className='rounded-md border-l-6 border-green-600 bg-green-600/10 text-green-600 dark:border-green-400 dark:bg-green-400/10 dark:text-green-400 max-w-lg'>
                       <FaMoneyCheck />
-                      <AlertTitle>Paid</AlertTitle>
+                      <AlertTitle>
+                        {order?.paymentResult?.update_time}
+                      </AlertTitle>
                     </Alert>
                   ) : (
                     <Alert className='border-destructive bg-destructive/10 text-destructive rounded-none border-0 border-l-6 max-w-lg'>
@@ -164,7 +248,7 @@ const OrderPage = () => {
                 <span className='dirham-symbol inline-block'>
                   &#xea;
                   <h4 className='font-sans inline-block'>
-                    {order?.itemsPrice}
+                    {order?.itemsPrice.toFixed(2)}
                   </h4>
                 </span>
               </div>
@@ -201,8 +285,24 @@ const OrderPage = () => {
                   </h4>
                 </span>
               </div>
+              <Separator className='my-6  bg-gray-400' />
 
               {/* Pay btn */}
+              {!order?.isPaid &&
+                (isPending ? (
+                  <Spinner />
+                ) : (
+                  <PayPalButtons
+                    onApprove={onApprove}
+                    createOrder={createOrder}
+                    style={{
+                      layout: 'vertical',
+                      color: 'gold',
+                      shape: 'pill',
+                      tagline: false,
+                    }}
+                  />
+                ))}
             </div>
           </Flex>
         </>

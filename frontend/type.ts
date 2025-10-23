@@ -72,7 +72,7 @@ export type Order = {
     country: string;
   };
   paymentMethod: string;
-  paymentResults: {
+  paymentResult: {
     id: string;
     status: string;
     update_time: string;
@@ -90,5 +90,21 @@ export type Order = {
 
 export type PlaceOrder = Omit<
   Order,
-  'paymentResults' | 'isPaid' | 'isDelivered' | 'deliveredAt' | 'user' | '_id'
+  | 'paymentResult'
+  | 'isPaid'
+  | 'isDelivered'
+  | 'deliveredAt'
+  | 'user'
+  | '_id'
+  | 'itemsPrice'
+  | 'taxPrice'
+  | 'shippingPrice'
+  | 'totalPrice'
 >;
+
+export type PayPalDetailsRes = {
+  id?: string;
+  email_address?: string;
+  status?: string;
+  update_time?: string;
+};

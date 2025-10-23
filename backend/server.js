@@ -37,6 +37,10 @@ app.use('/api/products', productsRouter);
 app.use('/api/users', authRouter);
 app.use('/api/orders', ordersRouter);
 
+app.get('/api/config/paypal', (req, res, next) =>
+  res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
+);
+
 app.use((req, res, next) => {
   const err = new Error("Sorry, we couldn't find what you were looking for.");
   err.status = 404;

@@ -29,6 +29,7 @@ const PlaceOrderPage = () => {
   const { itemsPrice, shippingPrice, taxPrice, totalPrice } =
     calculateOrderSummary(cartItems);
   const navigate = useNavigate();
+  console.log(cartItems);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (orderItems: PlaceOrder) => createOrders(orderItems),
@@ -57,10 +58,6 @@ const PlaceOrderPage = () => {
         product: item._id,
         qty: item.quantity,
       })),
-      itemsPrice: itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
       paymentMethod: payment,
     };
 
