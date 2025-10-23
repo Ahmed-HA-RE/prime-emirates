@@ -15,27 +15,39 @@ import {
 } from '@paypal/react-paypal-js';
 import { useMutation } from '@tanstack/react-query';
 import { updateOrderToPaid } from '~/api/orders';
-import type { PayPalDetailsRes } from 'type';
+import type { Order, PayPalDetailsRes, User } from 'type';
 import { toast } from 'sonner';
 import useCartStore from '~/store/cart';
-import useUserStore from '~/store/user';
+import axios from 'axios';
 
-export const loader = ({ request }: Route.LoaderArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const id = params.id;
   const refreshToken = request.headers.get('Cookie');
   if (!refreshToken) return redirect('/login');
+
+  const token = refreshToken.split('=')[1];
+
+  const ordersData = await axios.get<Order[]>(
+    `${import.meta.env.VITE_BACKEND_URL_DEV}/orders/my-orders`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  const order = ordersData.data.find((order) => order._id === id);
+
+  if (!order) {
+    return redirect('/');
+  }
+
+  return id;
 };
 
-const OrderPage = () => {
-  const { id } = useParams();
+const OrderPage = ({ loaderData }: Route.ComponentProps) => {
+  const id = loaderData;
   const setClearCart = useCartStore((state) => state.clearCart);
-  const accessToken = useUserStore((state) => state.accessToken);
-  const user = useUserStore((state) => state.user);
 
-  const {
-    data: order,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: order, isLoading } = useQuery({
     queryKey: ['order'],
     queryFn: () => getOrder(id),
   });

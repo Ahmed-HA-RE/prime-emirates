@@ -4,11 +4,25 @@ import MainLayout from '~/components/layouts/MainLayout';
 import UserProfileForm from '~/components/UserProfileForm';
 import { Flex } from '@radix-ui/themes';
 import DisplayOrders from '~/components/DisplayOrders';
+import axios from 'axios';
+import type { User } from 'type';
 
-export const loader = ({ request }: Route.LoaderArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
 
   if (!refreshToken) return redirect('/login');
+  const token = refreshToken.split('=')[1];
+
+  const userData = await axios.get<User>(
+    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  if (userData.data.user.role === 'admin') {
+    return redirect('/');
+  }
 };
 
 const UserProfilePage = () => {

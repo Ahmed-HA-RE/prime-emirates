@@ -92,7 +92,7 @@ export type Order = {
   isPaid: boolean;
   isDelivered: boolean;
   deliveredAt: string;
-  createdAt?: Date;
+  createdAt?: string;
 };
 
 export type PlaceOrder = Omit<

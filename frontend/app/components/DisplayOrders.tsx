@@ -6,13 +6,13 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from './ui/table';
 import { FaCheck } from 'react-icons/fa6';
 import { TriangleAlertIcon, X } from 'lucide-react';
+import { Link } from 'react-router';
 
 const DisplayOrders = () => {
   const {
@@ -24,7 +24,6 @@ const DisplayOrders = () => {
     queryFn: getUserOrders,
     staleTime: 3000,
   });
-  console.log(error?.message);
 
   return (
     <div className='flex-1/2'>
@@ -57,7 +56,10 @@ const DisplayOrders = () => {
               </TableHeader>
               <TableBody>
                 {orders?.map((order) => (
-                  <TableRow className='border-gray-400' key={order._id}>
+                  <TableRow
+                    className='border-gray-400 hover:bg-transparent'
+                    key={order._id}
+                  >
                     <TableCell className='font-medium'>{order._id}</TableCell>
                     <TableCell>{order.createdAt?.split('T')[0]}</TableCell>
                     <TableCell>{order.paymentMethod}</TableCell>
@@ -82,6 +84,14 @@ const DisplayOrders = () => {
                           {order.totalPrice}
                         </h4>
                       </span>
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        className='bg-gray-200 hover:opacity-85 p-1 text-xs rounded'
+                        to={`/order/${order._id}`}
+                      >
+                        Details
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
