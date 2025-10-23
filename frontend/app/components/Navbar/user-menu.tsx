@@ -18,17 +18,20 @@ import {
 import useUserStore from '~/store/user';
 import useCartStore from '~/store/cart';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import useShippingStore from '~/store/shipping';
 
 export default function UserMenu() {
   const setLogout = useUserStore((state) => state.setLogout);
   const clearCart = useCartStore((state) => state.clearCart);
+  const setClearAddress = useShippingStore((state) => state.setClearAddress);
   const accessToken = useUserStore((state) => state.accessToken);
+  const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
 
   const { data } = useQuery({
-    queryKey: ['user'],
+    queryKey: ['user', user],
     queryFn: getUserProfile,
-    enabled: !!accessToken,
   });
 
   const { mutateAsync, isPending } = useMutation({
@@ -38,46 +41,40 @@ export default function UserMenu() {
     },
   });
 
-  const isAdmin =
-    data?.user && data.user.role == 'admin'
-      ? [
-          {
-            href: '/products',
-            label: 'Products',
-            icon: (
-              <PackageSearch
-                size={16}
-                className='opacity-85'
-                aria-hidden='true'
-              />
-            ),
-          },
-          {
-            href: '/orders',
-            label: 'Orders',
-            icon: <Truck size={16} className='opacity-85' aria-hidden='true' />,
-          },
-          {
-            href: '/users',
-            label: 'Users',
-            icon: <Users size={16} className='opacity-85' aria-hidden='true' />,
-          },
-        ]
-      : [];
-
-  const userMenuLinks = [
+  const links = [
+    {
+      role: 'admin',
+      href: '/products',
+      label: 'Products',
+      icon: (
+        <PackageSearch size={16} className='opacity-85' aria-hidden='true' />
+      ),
+    },
+    {
+      role: 'admin',
+      href: '/orders',
+      label: 'Orders',
+      icon: <Truck size={16} className='opacity-85' aria-hidden='true' />,
+    },
+    {
+      role: 'admin',
+      href: '/users',
+      label: 'Users',
+      icon: <Users size={16} className='opacity-85' aria-hidden='true' />,
+    },
     {
       href: '/profile',
       label: 'Profile',
-      icon: <User size={16} className='opacity-85' aria-hidden='true' />,
+      role: 'user',
+      icon: <User size={16} />,
     },
-    ...isAdmin,
   ];
 
   const handleLogout = async () => {
     await mutateAsync();
     setLogout();
     clearCart();
+    setClearAddress();
   };
 
   if (isPending) {
@@ -118,17 +115,19 @@ export default function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator className='bg-white' />
         <DropdownMenuGroup>
-          {userMenuLinks.map((link) => (
-            <DropdownMenuItem asChild key={link.label}>
-              <Link
-                className='flex items-center gap-2 text-white hover:text-black cursor-pointer'
-                to={link.href}
-              >
-                {link.icon}
-                <span>{link.label}</span>
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {links
+            .filter((link) => link.role === user?.role)
+            .map((link) => (
+              <DropdownMenuItem asChild key={link.label}>
+                <Link
+                  className='flex items-center gap-2 text-white hover:text-black cursor-pointer'
+                  to={link.href}
+                >
+                  {link.icon}
+                  <span>{link.label}</span>
+                </Link>
+              </DropdownMenuItem>
+            ))}
         </DropdownMenuGroup>
         <DropdownMenuSeparator className='bg-white' />
 

@@ -43,6 +43,12 @@ export type UserLoginForm = Omit<
   password: string;
 };
 
+export type UserUpdateForm = {
+  email?: string;
+  name?: string;
+  password?: string;
+};
+
 export type Shipping = {
   address: string;
   city: string;
@@ -86,6 +92,7 @@ export type Order = {
   isPaid: boolean;
   isDelivered: boolean;
   deliveredAt: string;
+  createdAt?: Date;
 };
 
 export type PlaceOrder = Omit<

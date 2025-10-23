@@ -1,5 +1,10 @@
 import { api } from '~/lib/axios';
-import type { UserRegisterForm, UserLoginForm, User } from 'type';
+import type {
+  UserRegisterForm,
+  UserLoginForm,
+  User,
+  UserUpdateForm,
+} from 'type';
 import axios from 'axios';
 
 // Register user
@@ -87,6 +92,26 @@ export const refreshToken = async (): Promise<User> => {
 export const getUserProfile = async (): Promise<User> => {
   try {
     const { data } = await api.get('/users/my-profile', {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+// Update user's profile data
+export const updateUserProfile = async (
+  credentials: UserUpdateForm
+): Promise<User> => {
+  try {
+    const { data } = await api.put('/users/my-profile', credentials, {
       withCredentials: true,
     });
     return data;

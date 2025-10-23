@@ -44,3 +44,24 @@ export const userLoginFormSchema = userBaseSchema.omit({
   role: true,
   name: true,
 });
+
+export const userUpdateInfoSchema = z.object({
+  name: userBaseSchema.shape.name.optional(),
+  email: userBaseSchema.shape.name.optional(),
+  password: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val || val === '') return true;
+
+        if (val.length > 0) {
+          /^(?=.*[A-Z])/.test(val) && /^(?=.*[a-z])/.test(val);
+        }
+      },
+      {
+        error:
+          'Password must include at least one uppercase and one lowercase character.',
+      }
+    ),
+});

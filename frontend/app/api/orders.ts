@@ -56,3 +56,20 @@ export const updateOrderToPaid = async (
     throw new Error(message);
   }
 };
+
+export const getUserOrders = async (): Promise<Order[]> => {
+  try {
+    const { data } = await api.get('/orders/my-orders', {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (error instanceof axios.AxiosError) {
+      message = error.response?.data?.message;
+    }
+
+    throw new Error(message);
+  }
+};

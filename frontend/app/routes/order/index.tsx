@@ -18,6 +18,7 @@ import { updateOrderToPaid } from '~/api/orders';
 import type { PayPalDetailsRes } from 'type';
 import { toast } from 'sonner';
 import useCartStore from '~/store/cart';
+import useUserStore from '~/store/user';
 
 export const loader = ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
@@ -27,6 +28,8 @@ export const loader = ({ request }: Route.LoaderArgs) => {
 const OrderPage = () => {
   const { id } = useParams();
   const setClearCart = useCartStore((state) => state.clearCart);
+  const accessToken = useUserStore((state) => state.accessToken);
+  const user = useUserStore((state) => state.user);
 
   const {
     data: order,
@@ -35,7 +38,6 @@ const OrderPage = () => {
   } = useQuery({
     queryKey: ['order'],
     queryFn: () => getOrder(id),
-    staleTime: 5000,
   });
 
   const { mutateAsync, isPending } = useMutation({
@@ -54,7 +56,6 @@ const OrderPage = () => {
         position: 'top-center',
       });
       setClearCart();
-      refetch();
     },
 
     onError: (err) => {

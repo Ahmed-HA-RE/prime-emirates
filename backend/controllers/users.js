@@ -198,6 +198,7 @@ export const updateMyProfile = asyncHandler(async (req, res, next) => {
   }
 
   const { email, name, password } = validateReqData.data;
+  console.log(password);
 
   user.email = email || user.email;
   user.name = name || user.name;

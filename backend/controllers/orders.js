@@ -116,13 +116,16 @@ export const getOrder = asyncHandler(async (req, res, next) => {
 
   if (!order) {
     const err = new Error('No order found');
-    err.status(404);
+    err.status = 404;
     throw err;
   }
 
-  if (order.user !== req.user._id && req.user.role !== 'admin') {
+  if (
+    order.user._id.toString() !== req.user._id.toString() &&
+    req.user.role !== 'admin'
+  ) {
     const err = new Error("You don't have permission to access this order");
-    err.status(403);
+    err.status = 403;
     throw err;
   }
 
@@ -159,7 +162,6 @@ export const updateOrderToPaid = asyncHandler(async (req, res, next) => {
   // check the correct amount was paid
   const paidCorrectAmount = order.totalPrice.toString() === value;
   if (!paidCorrectAmount) throw new Error('Incorrect amount paid');
-  console.log(req.body);
 
   order.isPaid = true;
   order.paitAt = Date.now();
