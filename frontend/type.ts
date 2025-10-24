@@ -1,3 +1,5 @@
+import type { FileMetadata } from '~/hooks/use-file-upload';
+
 export type Product = {
   _id: string;
   name: string;
@@ -7,9 +9,14 @@ export type Product = {
   category: string;
   price: number;
   countInStock: number;
-  rating: number;
+  reviews: [{ name: string; rating: number; comment: string; user: string }];
   numReviews: number;
 };
+
+export type CreateProduct = Omit<
+  Product,
+  '_id' | 'reviews' | 'numReviews' | 'reviews' | 'image'
+>;
 
 export type CartItem = Pick<
   Product,

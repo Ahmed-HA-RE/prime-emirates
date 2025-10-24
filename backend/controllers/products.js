@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Product } from '../models/Product.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
-import { createProductSchema } from '../../schema/products.js';
+import { createProductSchema } from '../../schema/products.schema.js';
 
 // @route             GET /api/products
 // @description       Get all products
@@ -39,6 +39,7 @@ export const getProductById = asyncHandler(async (req, res, next) => {
 // @description       Create product
 // @access            Private/admin
 export const createProduct = asyncHandler(async (req, res, next) => {
+  console.log(req.file);
   if (!req.file) {
     const err = new Error('Please provide the product image');
     err.status = 400;

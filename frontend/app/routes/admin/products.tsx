@@ -139,7 +139,7 @@ const ProductsPage = () => {
                         aria-label={`product-${product._id}-edit`}
                         asChild
                       >
-                        <Link to={`product/${product._id}/edit`}>
+                        <Link to={`/admin/product/${product._id}/edit`}>
                           <PencilIcon />
                         </Link>
                       </Button>

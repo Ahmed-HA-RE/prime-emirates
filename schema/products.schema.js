@@ -8,18 +8,18 @@ export const productsBaseSchema = z.object({
   category: z.string().trim().nonempty(),
   price: z.coerce.number().nonnegative(),
   countInStock: z.coerce.number().min(0),
-  reviews: z
-    .array(
-      z.object({
-        name: z.string(),
-        rating: z.coerce.number(),
-        comment: z.string(),
-      })
-    )
-    .optional(),
+  reviews: z.array(
+    z.object({
+      name: z.string(),
+      rating: z.coerce.number(),
+      comment: z.string(),
+    })
+  ),
   numReviews: z.coerce.number().min(0),
 });
 
 export const createProductSchema = productsBaseSchema.omit({
   image: true,
+  reviews: true,
+  numReviews: true,
 });

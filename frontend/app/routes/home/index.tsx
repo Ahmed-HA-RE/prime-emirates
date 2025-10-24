@@ -42,7 +42,6 @@ const HomePage = ({ loaderData }: Route.ComponentProps) => {
         columns={{ initial: '1', sm: '2', md: '3' }}
         gap={'7'}
         width={'auto'}
-        align={'center'}
         justify={'center'}
       >
         {products.map((product) => (

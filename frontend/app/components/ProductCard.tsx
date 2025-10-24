@@ -35,7 +35,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <CardHeader>
           <CardTitle className='line-clamp-1 text-lg'>{product.name}</CardTitle>
           <CardDescription className='gap-2 mt-3'>
-            <Rating value={product.rating} text={product.numReviews} />
+            <Rating
+              value={product.reviews[0]?.rating}
+              text={product.numReviews}
+            />
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -47,12 +50,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <div className='flex flex-col'>
             <span className='text-sm font-medium uppercase'>Price</span>
             <span className='text-xl font-semibold dirham-symbol'>
-              &#xea;
-              <h3 className='font-sans inline-block'>{product.price}</h3>
+              &#xea; <h3 className='font-sans inline-block'>{product.price}</h3>
             </span>
           </div>
           <Button
-            className='cursor-pointer bg-white border border-black text-black hover:bg-black hover:text-white transition'
+            className='cursor-pointer bg-white border border-purple-300 text-black hover:bg-purple-300 hover:text-white transition'
             size='lg'
             disabled={product.countInStock === 0}
             onClick={() => addToCartBtn({ ...product, quantity: 1 })}
