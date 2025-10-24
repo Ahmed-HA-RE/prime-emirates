@@ -18,7 +18,6 @@ import {
 import useUserStore from '~/store/user';
 import useCartStore from '~/store/cart';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import useShippingStore from '~/store/shipping';
 
 export default function UserMenu() {

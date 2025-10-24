@@ -3,6 +3,23 @@ import { api } from '~/lib/axios';
 import axios from 'axios';
 import type { PayPalDetailsRes } from 'type';
 
+export const getOrders = async (): Promise<Order[]> => {
+  try {
+    const { data } = await api.get('/orders', {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (error instanceof axios.AxiosError) {
+      message = error.response?.data?.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
 export const getOrder = async (id: string | undefined): Promise<Order> => {
   try {
     const { data } = await api.get(`/orders/${id}`, {
@@ -38,7 +55,7 @@ export const createOrders = async (orderItems: PlaceOrder): Promise<Order> => {
 };
 
 export const updateOrderToPaid = async (
-  id: string | undefined,
+  id: string,
   paymentResults: PayPalDetailsRes
 ): Promise<Order> => {
   try {
@@ -60,6 +77,23 @@ export const updateOrderToPaid = async (
 export const getUserOrders = async (): Promise<Order[]> => {
   try {
     const { data } = await api.get('/orders/my-orders', {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (error instanceof axios.AxiosError) {
+      message = error.response?.data?.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+export const updateOrderToDelivered = async (id: string): Promise<Order> => {
+  try {
+    const { data } = await api.put(`/orders/${id}/deliver`, {
       withCredentials: true,
     });
     return data;

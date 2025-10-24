@@ -14,11 +14,13 @@ import {
   type PayPalButtonsComponentProps,
 } from '@paypal/react-paypal-js';
 import { useMutation } from '@tanstack/react-query';
-import { updateOrderToPaid } from '~/api/orders';
+import { updateOrderToPaid, updateOrderToDelivered } from '~/api/orders';
 import type { Order, PayPalDetailsRes, User } from 'type';
 import { toast } from 'sonner';
 import useCartStore from '~/store/cart';
 import axios from 'axios';
+import { Button } from '~/components/ui/button';
+import useUserStore from '~/store/user';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const id = params.id;
@@ -26,6 +28,13 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   if (!refreshToken) return redirect('/login');
 
   const token = refreshToken.split('=')[1];
+
+  const userData = await axios.get<User>(
+    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
   const ordersData = await axios.get<Order[]>(
     `${import.meta.env.VITE_BACKEND_URL_DEV}/orders/my-orders`,
@@ -36,7 +45,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
   const order = ordersData.data.find((order) => order._id === id);
 
-  if (!order) {
+  if (!order && userData.data.user.role !== 'admin') {
     return redirect('/');
   }
 
@@ -46,15 +55,20 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 const OrderPage = ({ loaderData }: Route.ComponentProps) => {
   const id = loaderData;
   const setClearCart = useCartStore((state) => state.clearCart);
+  const user = useUserStore((state) => state.user);
 
-  const { data: order, isLoading } = useQuery({
+  const {
+    data: order,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['order'],
     queryFn: () => getOrder(id),
   });
 
+  // Payed Order
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (details: PayPalDetailsRes) =>
-      updateOrderToPaid(order?._id, details),
+    mutationFn: (details: PayPalDetailsRes) => updateOrderToPaid(id, details),
 
     onSuccess: () => {
       toast.success('Order paid successfully!', {
@@ -81,6 +95,37 @@ const OrderPage = ({ loaderData }: Route.ComponentProps) => {
       });
     },
   });
+
+  // Delivered Order
+  const { mutateAsync: mutateDelivered, isPending: isPendingDelivered } =
+    useMutation({
+      mutationFn: () => updateOrderToDelivered(id),
+
+      onSuccess: () => {
+        toast.success('Order delivered successfully!', {
+          style: {
+            '--normal-bg':
+              'light-dark(var(--color-green-600), var(--color-green-400))',
+            '--normal-text': 'var(--color-white)',
+            '--normal-border':
+              'light-dark(var(--color-green-600), var(--color-green-400))',
+          } as React.CSSProperties,
+          position: 'top-center',
+        });
+        refetch();
+      },
+
+      onError: (err) => {
+        toast.error(err.message, {
+          style: {
+            '--normal-bg':
+              'light-dark(var(--destructive), color-mix(in oklab, var(--destructive) 60%, var(--background)))',
+            '--normal-text': 'var(--color-white)',
+            '--normal-border': 'transparent',
+          } as React.CSSProperties,
+        });
+      },
+    });
 
   const onApprove: PayPalButtonsComponentProps['onApprove'] = async (
     data,
@@ -117,6 +162,11 @@ const OrderPage = ({ loaderData }: Route.ComponentProps) => {
         },
       ],
     });
+  };
+
+  const handleDelivered = async () => {
+    await mutateDelivered();
+    refetch();
   };
 
   return (
@@ -300,11 +350,12 @@ const OrderPage = ({ loaderData }: Route.ComponentProps) => {
               </div>
               <Separator className='my-6  bg-gray-400' />
 
-              {/* Pay btn */}
-              {!order?.isPaid &&
-                (isPending ? (
-                  <Spinner />
-                ) : (
+              {order?.isPaid &&
+              !order?.isDelivered &&
+              user?.role === 'admin' ? (
+                <Button onClick={handleDelivered}>Mark As Delivered</Button>
+              ) : (
+                !order?.isPaid && (
                   <PayPalButtons
                     onApprove={onApprove}
                     createOrder={createOrder}
@@ -315,7 +366,13 @@ const OrderPage = ({ loaderData }: Route.ComponentProps) => {
                       tagline: false,
                     }}
                   />
-                ))}
+                )
+              )}
+              {isPending ? (
+                <Spinner />
+              ) : isPendingDelivered ? (
+                <Spinner />
+              ) : null}
             </div>
           </Flex>
         </>
