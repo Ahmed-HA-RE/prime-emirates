@@ -21,6 +21,18 @@ const errorHandler = async (err, req, res, next) => {
     message = 'Your session has expired. Please log in again to continue.';
   }
 
+  // Multer LIMIT_UNEXPECTED_FILE
+  if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+    status = 401;
+    message = 'You can upload 1 image only.';
+  }
+
+  // Multer LIMIT_FILE_SIZE
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    status = 401;
+    message = 'Image size must not exceed 10MB ';
+  }
+
   res.status(status).json({ success: false, message });
 };
 
