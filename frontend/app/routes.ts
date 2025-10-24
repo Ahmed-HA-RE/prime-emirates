@@ -11,7 +11,7 @@ export default [
   route('/register', 'routes/auth/register.tsx'),
   route('/login', 'routes/auth/login.tsx'),
   route('/profile', 'routes/user/index.tsx'),
-  route('/orders', 'routes/admin/orders.tsx'),
-  route('/users', 'routes/admin/users.tsx'),
-  route('/products', 'routes/admin/products.tsx'),
+  route('/admin/orders', 'routes/admin/orders.tsx'),
+  route('/admin/users', 'routes/admin/users.tsx'),
+  route('/admin/products', 'routes/admin/products.tsx'),
 ] satisfies RouteConfig;

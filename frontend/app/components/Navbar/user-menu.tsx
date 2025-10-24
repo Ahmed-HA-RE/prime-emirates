@@ -43,7 +43,7 @@ export default function UserMenu() {
   const links = [
     {
       role: 'admin',
-      href: '/products',
+      href: '/admin/products',
       label: 'Products',
       icon: (
         <PackageSearch size={16} className='opacity-85' aria-hidden='true' />
@@ -51,13 +51,13 @@ export default function UserMenu() {
     },
     {
       role: 'admin',
-      href: '/orders',
+      href: '/admin/orders',
       label: 'Orders',
       icon: <Truck size={16} className='opacity-85' aria-hidden='true' />,
     },
     {
       role: 'admin',
-      href: '/users',
+      href: '/admin/users',
       label: 'Users',
       icon: <Users size={16} className='opacity-85' aria-hidden='true' />,
     },

@@ -32,7 +32,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     }
   );
 
-  if (data.user.role === 'user') return redirect('/');
+  if (data.user.role !== 'admin') return redirect('/');
 };
 
 const OrdersPage = () => {
