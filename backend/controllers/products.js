@@ -1,7 +1,10 @@
 import asyncHandler from 'express-async-handler';
 import { Product } from '../models/Product.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
-import { createProductSchema } from '../../schema/products.schema.js';
+import {
+  createProductSchema,
+  updateProductSchema,
+} from '../../schema/products.schema.js';
 
 // @route             GET /api/products
 // @description       Get all products
@@ -39,7 +42,6 @@ export const getProductById = asyncHandler(async (req, res, next) => {
 // @description       Create product
 // @access            Private/admin
 export const createProduct = asyncHandler(async (req, res, next) => {
-  console.log(req.file);
   if (!req.file) {
     const err = new Error('Please provide the product image');
     err.status = 400;
@@ -75,4 +77,57 @@ export const createProduct = asyncHandler(async (req, res, next) => {
   });
 
   res.status(201).json(newProduct);
+});
+
+// @route             PUT /api/products/:productId
+// @description       Update product
+// @access            Private/admin
+export const updateProduct = asyncHandler(async (req, res, next) => {
+  const { productId } = req.params;
+  console.log(req.body);
+  const product = await Product.findById(productId);
+
+  if (!req.body || (Object.keys(req.body).length === 0 && !req.file)) {
+    const err = new Error(
+      'Please provide the field you want to update the product with'
+    );
+    err.status = 400;
+    throw err;
+  }
+
+  if (req.file) {
+    let image = req.file;
+    if (!image.mimetype.startsWith('image')) {
+      const err = new Error(
+        'Please select a valid image file (JPG, PNG, or WEBP).'
+      );
+      err.status = 400;
+      throw err;
+    }
+    image = await uploadToCloudinary(image);
+    product.image = image.secure_url || product.image;
+  }
+
+  const validatedProductsReq = updateProductSchema.safeParse(req.body);
+
+  if (!validatedProductsReq.success) {
+    console.log(validatedProductsReq.error);
+    const err = new Error('Invalid Data Entered');
+    err.status = 400;
+    throw err;
+  }
+
+  const { brand, name, category, countInStock, description, price } =
+    validatedProductsReq.data;
+
+  product.name = name || product.name;
+  product.brand = product.brand || brand;
+  product.category = product.category || category;
+  product.countInStock = product.countInStock || countInStock;
+  product.description = product.description || description;
+  product.price = product.price || price;
+
+  product.save();
+
+  res.status(200).json(product);
 });

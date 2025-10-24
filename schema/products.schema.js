@@ -23,3 +23,13 @@ export const createProductSchema = productsBaseSchema.omit({
   reviews: true,
   numReviews: true,
 });
+
+export const updateProductSchema = z.object({
+  name: productsBaseSchema.shape.name.optional(),
+  description: productsBaseSchema.shape.description.optional(),
+  brand: productsBaseSchema.shape.brand.optional(),
+  category: productsBaseSchema.shape.category.optional(),
+  price: productsBaseSchema.shape.price.optional(),
+  countInStock: productsBaseSchema.shape.countInStock.optional(),
+  price: productsBaseSchema.shape.price.optional(),
+});

@@ -36,16 +36,17 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
     }
   );
 
-  const ordersData = await axios.get<Order[]>(
-    `${import.meta.env.VITE_BACKEND_URL_DEV}/orders/my-orders`,
+  const orderData = await axios.get<Order>(
+    `${import.meta.env.VITE_BACKEND_URL_DEV}/orders/${id}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
 
-  const order = ordersData.data.find((order) => order._id === id);
-
-  if (!order && userData.data.user.role !== 'admin') {
+  if (
+    orderData.data.user._id !== userData.data.user._id &&
+    userData.data.user.role !== 'admin'
+  ) {
     return redirect('/');
   }
 

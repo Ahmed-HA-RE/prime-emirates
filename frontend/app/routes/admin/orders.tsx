@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { getOrders } from '~/api/orders';
-import { PencilIcon, Trash2Icon, TriangleAlertIcon, X } from 'lucide-react';
+import { TriangleAlertIcon, X } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import {
   Table,
