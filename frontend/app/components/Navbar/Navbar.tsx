@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className='flex h-16 items-center justify-between gap-4 max-w-7xl mx-auto'>
         {/* Left side */}
         <Link to={'/'} className='flex flex-row md:flex-1/2 items-center gap-1'>
-          <img src='/assests/logo.png' alt='logo' />
+          <img src='/logo.png' alt='logo' />
           <span className='text-white font-semibold tracking-wide hidden md:block'>
             PrimeEmirates
           </span>

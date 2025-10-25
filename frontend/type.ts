@@ -35,6 +35,14 @@ export type User = {
   };
 };
 
+export type Users = {
+  _id: string;
+  email: string;
+  name: string;
+  role: string;
+  createdAt: string;
+};
+
 export type UserRegisterForm = Omit<
   User['user'],
   'role' | '_id' | 'accessToken'

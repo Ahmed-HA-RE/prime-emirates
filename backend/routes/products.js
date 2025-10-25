@@ -13,7 +13,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(protect, authRole, getProducts) // GET /api/products
+  .get(getProducts) // GET /api/products
   .post(protect, authRole, upload.single('image'), createProduct); // POST /api/products
 
 router

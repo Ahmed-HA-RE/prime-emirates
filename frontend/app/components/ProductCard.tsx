@@ -54,7 +54,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           </div>
           <Button
-            className='cursor-pointer bg-white border border-purple-300 text-black hover:bg-purple-300 hover:text-white transition'
+            className='cursor-pointer bg-white border border-blue-500 text-black hover:bg-blue-500 hover:text-white transition'
             size='lg'
             disabled={product.countInStock === 0}
             onClick={() => addToCartBtn({ ...product, quantity: 1 })}

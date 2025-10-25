@@ -43,7 +43,7 @@ const Rating = ({ value, text }: { value: number; text: number }) => {
         )}
       </div>
       {/* Reviews */}
-      <h2 className='text-white'>{text} reviews</h2>
+      <h2 className='text-black'>{text} reviews</h2>
     </div>
   );
 };

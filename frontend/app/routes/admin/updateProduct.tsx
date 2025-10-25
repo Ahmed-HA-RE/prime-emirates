@@ -1,4 +1,4 @@
-import type { Route } from './+types/editProduct';
+import type { Route } from './+types/updateProduct';
 import ProductFormLayout from '~/components/layouts/ProductFormLayout';
 import { useMutation } from '@tanstack/react-query';
 import { updateProductSchema } from '../../../../schema/products';

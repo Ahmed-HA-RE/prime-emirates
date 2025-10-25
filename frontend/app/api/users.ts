@@ -4,6 +4,7 @@ import type {
   UserLoginForm,
   User,
   UserUpdateForm,
+  Users,
 } from 'type';
 import axios from 'axios';
 
@@ -112,6 +113,24 @@ export const updateUserProfile = async (
 ): Promise<User> => {
   try {
     const { data } = await api.put('/users/my-profile', credentials, {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+// Get all users data
+export const getUsers = async (): Promise<Users[]> => {
+  try {
+    const { data } = await api.get('/users', {
       withCredentials: true,
     });
     return data;

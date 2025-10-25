@@ -222,7 +222,15 @@ export const updateMyProfile = asyncHandler(async (req, res, next) => {
 // @description        Get all users
 // @access             Private
 export const getUsers = asyncHandler(async (req, res, next) => {
-  res.status(200).send('Get all users as an admin role');
+  const users = await User.find().select('-password');
+
+  if (!users) {
+    const err = new Error('No users found');
+    err.status = 404;
+    throw err;
+  }
+
+  res.status(200).json(users);
 });
 // @route              GET api/users/:userId
 // @description        Get single user
