@@ -3,10 +3,21 @@ import type { Route } from './+types/products';
 import axios from 'axios';
 import type { User } from 'type';
 import { Alert, AlertTitle, AlertDescription } from '~/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../../components/ui/alert-dialog';
 import { Spinner } from '../../components/ScreenSpinner';
 import { useQuery } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { getProducts } from '~/api/products';
+import { deleteProduct, getProducts } from '~/api/products';
 import {
   Table,
   TableBody,
@@ -26,6 +37,8 @@ import { Link } from 'react-router';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Flex } from '@radix-ui/themes';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
@@ -44,6 +57,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 const ProductsPage = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [productId, setProductId] = useState('');
+
   const {
     data: products,
     isLoading,
@@ -55,9 +71,36 @@ const ProductsPage = () => {
     staleTime: 5000,
   });
 
-  const handleDeleteProduct = async () => {
-    console.log('deleted');
-    refetch();
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (productId: string) => deleteProduct(productId),
+    onSuccess: () => {
+      toast.success('Product deleted successfully', {
+        style: {
+          '--normal-bg':
+            'light-dark(var(--color-green-600), var(--color-green-500))',
+          '--normal-text': 'var(--color-white)',
+          '--normal-border':
+            'light-dark(var(--color-green-600), var(--color-green-500))',
+        } as React.CSSProperties,
+      });
+      refetch();
+    },
+
+    onError: (error) => {
+      toast.error(error.message, {
+        style: {
+          '--normal-bg':
+            'light-dark(var(--destructive), color-mix(in oklab, var(--destructive) 60%, var(--background)))',
+          '--normal-text': 'var(--color-white)',
+          '--normal-border': 'transparent',
+        } as React.CSSProperties,
+      });
+    },
+  });
+
+  const handleDeleteProduct = async (productId: string) => {
+    await mutateAsync(productId);
+    setOpenModal(false);
   };
 
   return (
@@ -84,6 +127,8 @@ const ProductsPage = () => {
           </AlertDescription>
         </Alert>
       ) : isLoading ? (
+        <Spinner />
+      ) : isPending ? (
         <Spinner />
       ) : (
         <div className='w-full'>
@@ -148,7 +193,10 @@ const ProductsPage = () => {
                         size='icon'
                         className='rounded-full'
                         aria-label={`product-${product._id}-remove`}
-                        onClick={handleDeleteProduct}
+                        onClick={() => {
+                          setOpenModal(true);
+                          setProductId(product._id);
+                        }}
                       >
                         <Trash2Icon />
                       </Button>
@@ -160,6 +208,33 @@ const ProductsPage = () => {
           </div>
         </div>
       )}
+      <AlertDialog open={openModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader className='items-center'>
+            <div className='bg-destructive/10 mx-auto mb-2 flex size-12 items-center justify-center rounded-full'>
+              <TriangleAlertIcon className='text-destructive size-6' />
+            </div>
+            <AlertDialogTitle>
+              Are you absolutely sure you want to delete?
+            </AlertDialogTitle>
+            <AlertDialogDescription className='text-center'>
+              This action cannot be undone. This will permanently delete your
+              product and remove it from our database.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenModal(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleDeleteProduct(productId)}
+              className='bg-destructive dark:bg-destructive/60 hover:bg-destructive focus-visible:ring-destructive text-white'
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </MainLayout>
   );
 };

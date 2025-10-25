@@ -49,7 +49,6 @@ export const createProduct = asyncHandler(async (req, res, next) => {
   }
 
   let image = req.file;
-  console.log(image);
 
   if (!image.mimetype.startsWith('image')) {
     const err = new Error(
@@ -85,6 +84,12 @@ export const createProduct = asyncHandler(async (req, res, next) => {
 export const updateProduct = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
   const product = await Product.findById(productId);
+
+  if (!product) {
+    const err = new Error('No product found');
+    err.status = 404;
+    throw err;
+  }
 
   if (!req.body || (Object.keys(req.body).length === 0 && !req.file)) {
     const err = new Error(
@@ -129,4 +134,21 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
   product.save();
 
   res.status(200).json(product);
+});
+
+// @route             DELETE /api/products/:productId
+// @description       Delete product
+// @access            Private/admin
+export const deleteProduct = asyncHandler(async (req, res, next) => {
+  const { productId } = req.params;
+
+  if (!productId) {
+    const err = new Error('No product found');
+    err.status = 404;
+    throw err;
+  }
+
+  await Product.findByIdAndDelete(productId);
+
+  res.status(200).json({ message: 'Deleted successfully' });
 });

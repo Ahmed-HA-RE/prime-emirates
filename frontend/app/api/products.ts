@@ -74,3 +74,21 @@ export const updateProduct = async (
     throw new Error(message);
   }
 };
+
+// Delete product
+export const deleteProduct = async (productId: string) => {
+  try {
+    const { data } = await api.delete(`/products/${productId}`, {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
