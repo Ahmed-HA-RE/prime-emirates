@@ -15,13 +15,13 @@ import type { CreateProduct } from 'type';
 import type { UseFormReturn } from 'react-hook-form';
 
 type CreateProductFormProps = {
-  form: UseFormReturn<CreateProduct, any, CreateProduct>;
+  form: UseFormReturn<Partial<CreateProduct>, any, Partial<CreateProduct>>;
   setImage: React.Dispatch<
     React.SetStateAction<File | FileMetadata | undefined>
   >;
 };
 
-const CreateProductForm = ({ form, setImage }: CreateProductFormProps) => {
+const UpdateProductForm = ({ form, setImage }: CreateProductFormProps) => {
   return (
     <>
       {/* Name */}
@@ -65,8 +65,8 @@ const CreateProductForm = ({ form, setImage }: CreateProductFormProps) => {
             <FormControl>
               <Input
                 type='number'
-                placeholder=' '
                 step={0.01}
+                placeholder=' '
                 className='bg-transparent border-black focus-visible:ring-blue-300 focus-visible:border-blue-300'
                 {...field}
                 min={0}
@@ -89,8 +89,6 @@ const CreateProductForm = ({ form, setImage }: CreateProductFormProps) => {
                 type='number'
                 placeholder=' '
                 className='bg-transparent border-black focus-visible:ring-blue-300 focus-visible:border-blue-300'
-                // value={field.value}
-                // onChange={(e) => field.onChange(+e.target.value)}
                 {...field}
                 min={0}
               />
@@ -202,4 +200,4 @@ const CreateProductForm = ({ form, setImage }: CreateProductFormProps) => {
   );
 };
 
-export default CreateProductForm;
+export default UpdateProductForm;

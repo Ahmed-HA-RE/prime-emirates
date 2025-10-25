@@ -1,5 +1,3 @@
-import type { FileMetadata } from '~/hooks/use-file-upload';
-
 export type Product = {
   _id: string;
   name: string;
@@ -17,6 +15,8 @@ export type CreateProduct = Omit<
   Product,
   '_id' | 'reviews' | 'numReviews' | 'reviews' | 'image'
 >;
+
+export type UpdateProduct = Partial<CreateProduct>;
 
 export type CartItem = Pick<
   Product,

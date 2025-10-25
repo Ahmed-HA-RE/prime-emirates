@@ -1,7 +1,8 @@
+import type { Route } from './+types/createProduct';
 import ProductFormLayout from '~/components/layouts/ProductFormLayout';
 import { useMutation } from '@tanstack/react-query';
 import { createProductSchema } from '../../../../schema/products';
-import type { CreateProduct } from 'type';
+import type { CreateProduct, User } from 'type';
 import { Spinner } from '~/components/ScreenSpinner';
 import {
   useForm,
@@ -14,7 +15,25 @@ import { createProduct } from '~/api/products';
 import type { FileMetadata } from '~/hooks/use-file-upload';
 import { useState } from 'react';
 import { Form } from '~/components/ui/form';
-import CreateProductForm from '~/components/createProductForm';
+import CreateProductForm from '~/components/CreateProductForm';
+import { redirect } from 'react-router';
+import axios from 'axios';
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const refreshToken = request.headers.get('Cookie');
+  if (!refreshToken) return redirect('/login');
+
+  const token = refreshToken.split('=')[1];
+
+  const { data } = await axios.get<User>(
+    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  if (data.user.role !== 'admin') return redirect('/');
+};
 
 const CreateProductPage = () => {
   const [image, setImage] = useState<File | FileMetadata>();

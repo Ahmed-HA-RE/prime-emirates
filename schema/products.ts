@@ -37,3 +37,5 @@ export const createProductSchema = z.object({
   brand: productsBaseSchema.shape.brand,
   description: productsBaseSchema.shape.description,
 });
+
+export const updateProductSchema = createProductSchema.partial();

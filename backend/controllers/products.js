@@ -84,7 +84,6 @@ export const createProduct = asyncHandler(async (req, res, next) => {
 // @access            Private/admin
 export const updateProduct = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
-  console.log(req.body);
   const product = await Product.findById(productId);
 
   if (!req.body || (Object.keys(req.body).length === 0 && !req.file)) {
@@ -121,11 +120,11 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
     validatedProductsReq.data;
 
   product.name = name || product.name;
-  product.brand = product.brand || brand;
-  product.category = product.category || category;
-  product.countInStock = product.countInStock || countInStock;
-  product.description = product.description || description;
-  product.price = product.price || price;
+  product.brand = brand || product.brand;
+  product.category = category || product.category;
+  product.countInStock = countInStock || product.countInStock;
+  product.description = description || product.description;
+  product.price = price || product.price;
 
   product.save();
 

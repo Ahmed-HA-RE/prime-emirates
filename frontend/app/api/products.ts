@@ -52,3 +52,25 @@ export const createProduct = async (productData: FormData) => {
     throw new Error(message);
   }
 };
+
+// Update product
+export const updateProduct = async (
+  productData: FormData,
+  productId: string
+) => {
+  try {
+    const { data } = await api.put(`/products/${productId}`, productData, {
+      withCredentials: true,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
