@@ -65,3 +65,9 @@ export const userUpdateInfoSchema = z.object({
       }
     ),
 });
+
+export const userForAdminUpdateSchema = z.object({
+  name: userBaseSchema.shape.name.optional(),
+  email: userBaseSchema.shape.email.optional(),
+  role: userBaseSchema.shape.role.optional(),
+});

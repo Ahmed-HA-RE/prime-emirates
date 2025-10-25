@@ -4,14 +4,12 @@ import axios from 'axios';
 import type { User } from 'type';
 import MainLayout from '~/components/layouts/MainLayout';
 import { Spinner } from '~/components/ScreenSpinner';
-import { useQuery } from '@tanstack/react-query';
-import { getUsers } from '~/api/users';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { deleteUserAsAdmin, getUsers } from '~/api/users';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import {
   Check,
-  Edit,
   PencilIcon,
-  Trash,
   Trash2Icon,
   TriangleAlertIcon,
   X,
@@ -24,8 +22,20 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { Avatar, AvatarFallback } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '~/components/ui/alert-dialog';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
@@ -44,57 +54,51 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 const UsersPage = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [userId, setUserId] = useState('');
+
   const {
     data: users,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['admin', 'users'],
     queryFn: getUsers,
     staleTime: 5000,
   });
-  const items = [
-    {
-      id: '1',
-      name: 'Philip George',
-      src: 'https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png',
-      fallback: 'PG',
-      email: 'philipgeorge20@gmail.com',
-      location: 'Mumbai, India',
-      status: 'Active',
-      balance: '$10,696.00',
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => deleteUserAsAdmin(userId),
+    onSuccess: () => {
+      toast.success('Product deleted successfully', {
+        style: {
+          '--normal-bg':
+            'light-dark(var(--color-green-600), var(--color-green-500))',
+          '--normal-text': 'var(--color-white)',
+          '--normal-border':
+            'light-dark(var(--color-green-600), var(--color-green-500))',
+        } as React.CSSProperties,
+      });
+      refetch();
     },
-    {
-      id: '2',
-      name: 'Tiana Curtis',
-      src: 'https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-2.png',
-      fallback: 'TC',
-      email: 'tiana12@yahoo.com',
-      location: 'New York, US',
-      status: 'applied',
-      balance: '$0.00',
+
+    onError: (error) => {
+      toast.error(error.message, {
+        style: {
+          '--normal-bg':
+            'light-dark(var(--destructive), color-mix(in oklab, var(--destructive) 60%, var(--background)))',
+          '--normal-text': 'var(--color-white)',
+          '--normal-border': 'transparent',
+        } as React.CSSProperties,
+      });
     },
-    {
-      id: '3',
-      name: 'Jaylon Donin',
-      src: 'https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-3.png',
-      fallback: 'JD',
-      email: 'jaylon23d.@outlook.com',
-      location: 'Washington, US',
-      status: 'Active',
-      balance: '$569.00',
-    },
-    {
-      id: '4',
-      name: 'Kim Yim',
-      src: 'https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-4.png',
-      fallback: 'KY',
-      email: 'kim96@gmail.com',
-      location: 'Busan, South Korea',
-      status: 'Inactive',
-      balance: '-$506.90',
-    },
-  ];
+  });
+
+  const handleDeleteUser = async () => {
+    await mutateAsync();
+    setOpenModal(false);
+  };
 
   return (
     <MainLayout>
@@ -102,7 +106,7 @@ const UsersPage = () => {
         Users
       </h1>
       {error ? (
-        <Alert className='bg-destructive dark:bg-destructive/60 border-none text-white'>
+        <Alert className='bg-destructive dark:bg-destructive/60 border-none text-white max-w-md'>
           <TriangleAlertIcon />
           <AlertTitle>{error.message}</AlertTitle>
           <AlertDescription className='text-white/80'>
@@ -110,6 +114,8 @@ const UsersPage = () => {
           </AlertDescription>
         </Alert>
       ) : isLoading ? (
+        <Spinner />
+      ) : isPending ? (
         <Spinner />
       ) : (
         <div className='w-full '>
@@ -145,27 +151,33 @@ const UsersPage = () => {
                         <X className='text-red-500' size={'30px'} />
                       )}
                     </TableCell>
-                    <TableCell className='p-0'>
-                      <Button
-                        variant='ghost'
-                        size='icon'
-                        className='rounded-full'
-                        aria-label={`user-${user._id}-edit`}
-                        asChild
-                      >
-                        <Link to={`/admin/users/${user._id}/edit`}>
-                          <PencilIcon />
-                        </Link>
-                      </Button>
-                      <Button
-                        variant='ghost'
-                        size='icon'
-                        className='rounded-full'
-                        aria-label={`user-${user._id}-delete`}
-                      >
-                        <Trash2Icon />
-                      </Button>
-                    </TableCell>
+                    {user?.role !== 'admin' ? (
+                      <TableCell className='p-0'>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          className='rounded-full'
+                          aria-label={`user-${user._id}-edit`}
+                          asChild
+                        >
+                          <Link to={`/admin/user/${user._id}/edit`}>
+                            <PencilIcon />
+                          </Link>
+                        </Button>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          className='rounded-full'
+                          aria-label={`user-${user._id}-delete`}
+                          onClick={() => {
+                            setUserId(user._id);
+                            setOpenModal(true);
+                          }}
+                        >
+                          <Trash2Icon />
+                        </Button>
+                      </TableCell>
+                    ) : null}
                   </TableRow>
                 ))}
               </TableBody>
@@ -173,6 +185,33 @@ const UsersPage = () => {
           </div>
         </div>
       )}
+      <AlertDialog open={openModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader className='items-center'>
+            <div className='bg-destructive/10 mx-auto mb-2 flex size-12 items-center justify-center rounded-full'>
+              <TriangleAlertIcon className='text-destructive size-6' />
+            </div>
+            <AlertDialogTitle>
+              Are you absolutely sure you want to delete?
+            </AlertDialogTitle>
+            <AlertDialogDescription className='text-center'>
+              This action cannot be undone. This will permanently delete your
+              product and remove it from our database.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenModal(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className='bg-destructive dark:bg-destructive/60 hover:bg-destructive focus-visible:ring-destructive text-white'
+              onClick={handleDeleteUser}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </MainLayout>
   );
 };

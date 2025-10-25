@@ -142,13 +142,14 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
 export const deleteProduct = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
 
-  if (!productId) {
+  const product = await Product.findById(productId);
+  if (!product) {
     const err = new Error('No product found');
     err.status = 404;
     throw err;
   }
 
-  await Product.findByIdAndDelete(productId);
+  await product.deleteOne();
 
   res.status(200).json({ message: 'Deleted successfully' });
 });

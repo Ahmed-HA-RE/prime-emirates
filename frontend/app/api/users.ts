@@ -4,7 +4,8 @@ import type {
   UserLoginForm,
   User,
   UserUpdateForm,
-  Users,
+  UserForAdmin,
+  UpdateUserAsAdmin,
 } from 'type';
 import axios from 'axios';
 
@@ -127,10 +128,67 @@ export const updateUserProfile = async (
   }
 };
 
-// Get all users data
-export const getUsers = async (): Promise<Users[]> => {
+// Get all users data (Admin)
+export const getUsers = async (): Promise<UserForAdmin[]> => {
   try {
     const { data } = await api.get('/users', {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+// Get single user data (Admin)
+export const getUser = async (userId: string): Promise<UserForAdmin> => {
+  try {
+    const { data } = await api.get(`/users/${userId}`, {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+// Update user's data (Admin)
+export const updateUserAsAdmin = async (
+  userId: string,
+  updateUserAsAdminData: UpdateUserAsAdmin
+): Promise<UserForAdmin> => {
+  try {
+    const { data } = await api.put(`/users/${userId}`, updateUserAsAdminData, {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+// Delete user (Admin)
+export const deleteUserAsAdmin = async (userId: string) => {
+  try {
+    const { data } = await api.delete(`/users/${userId}`, {
       withCredentials: true,
     });
     return data;

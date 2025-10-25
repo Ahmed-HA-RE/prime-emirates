@@ -1,5 +1,5 @@
 import type { Route } from './+types/updateProduct';
-import ProductFormLayout from '~/components/layouts/ProductFormLayout';
+import FormLayout from '~/components/layouts/FormLayout';
 import { useMutation } from '@tanstack/react-query';
 import { updateProductSchema } from '../../../../schema/products';
 import type { UpdateProduct, User } from 'type';
@@ -123,7 +123,7 @@ const UpdateProductPage = ({ loaderData }: Route.ComponentProps) => {
   };
 
   return (
-    <ProductFormLayout>
+    <FormLayout adminLinks='products'>
       <h1 className='text-3xl md:text-4xl tracking-wide font-bold mb-6'>
         Edit Product
       </h1>
@@ -138,7 +138,7 @@ const UpdateProductPage = ({ loaderData }: Route.ComponentProps) => {
           <UpdateProductForm form={form} setImage={setImage} />
         </form>
       </Form>
-    </ProductFormLayout>
+    </FormLayout>
   );
 };
 

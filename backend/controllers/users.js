@@ -1,5 +1,6 @@
 import {
   userBaseSchema,
+  userForAdminUpdateSchema,
   userLoginSchema,
   userUpdateInfoSchema,
 } from '../../schema/users.schema.js';
@@ -220,10 +221,9 @@ export const updateMyProfile = asyncHandler(async (req, res, next) => {
 
 // @route              GET api/users
 // @description        Get all users
-// @access             Private
+// @access             Private/admin
 export const getUsers = asyncHandler(async (req, res, next) => {
   const users = await User.find().select('-password');
-
   if (!users) {
     const err = new Error('No users found');
     err.status = 404;
@@ -234,19 +234,77 @@ export const getUsers = asyncHandler(async (req, res, next) => {
 });
 // @route              GET api/users/:userId
 // @description        Get single user
-// @access             Private
+// @access             Private/admin
 export const getUser = asyncHandler(async (req, res, next) => {
-  res.status(200).send('Get user by his id as an admin role');
+  const { userId } = req.params;
+
+  const user = await User.findById(userId).select('-password');
+
+  if (!user) {
+    const err = new Error('No user found');
+    err.status = 404;
+    throw err;
+  }
+
+  res.status(200).json(user);
 });
 // @route              PUT api/users/:userId
 // @description        Update single user data
-// @access             Private
+// @access             Private/admin
 export const UpdateUser = asyncHandler(async (req, res, next) => {
-  res.status(200).send('Update user as an admin role');
+  const { userId } = req.params;
+
+  if (!req.body || Object.keys(req.body).length === 0) {
+    const err = new Error(
+      'Please provide at least one field to update the user.'
+    );
+    err.status = 400;
+    throw err;
+  }
+
+  const user = await User.findById(userId).select('-password');
+
+  if (!user) {
+    const err = new Error('No user found');
+    err.status = 404;
+    throw err;
+  }
+
+  const validatedUpdateUserForAdmin = userForAdminUpdateSchema.safeParse(
+    req.body
+  );
+
+  if (!validatedUpdateUserForAdmin.success) {
+    const err = new Error('Invalid Data');
+    err.status = 400;
+    throw err;
+  }
+
+  const { email, name, role } = validatedUpdateUserForAdmin.data;
+
+  user.email = email || user.email;
+  user.name = name || user.name;
+  user.role = role || user.role;
+
+  await user.save();
+
+  res.status(200).json(user);
 });
 // @route              DELETE api/users/:userId
 // @description        Delete users
-// @access             Private
+// @access             Private/admin
 export const deleteUser = asyncHandler(async (req, res, next) => {
-  res.status(200).send('Delete user as an admin role');
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    const err = new Error('No user found');
+    err.status = 404;
+    throw err;
+  }
+
+  await user.deleteOne();
+
+  res.status(200).json({ message: 'Deleted successfully' });
 });

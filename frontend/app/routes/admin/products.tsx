@@ -72,7 +72,7 @@ const ProductsPage = () => {
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (productId: string) => deleteProduct(productId),
+    mutationFn: () => deleteProduct(productId),
     onSuccess: () => {
       toast.success('Product deleted successfully', {
         style: {
@@ -98,8 +98,8 @@ const ProductsPage = () => {
     },
   });
 
-  const handleDeleteProduct = async (productId: string) => {
-    await mutateAsync(productId);
+  const handleDeleteProduct = async () => {
+    await mutateAsync();
     setOpenModal(false);
   };
 
@@ -194,8 +194,8 @@ const ProductsPage = () => {
                         className='rounded-full'
                         aria-label={`product-${product._id}-remove`}
                         onClick={() => {
-                          setOpenModal(true);
                           setProductId(product._id);
+                          setOpenModal(true);
                         }}
                       >
                         <Trash2Icon />
@@ -227,7 +227,7 @@ const ProductsPage = () => {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteProduct(productId)}
+              onClick={handleDeleteProduct}
               className='bg-destructive dark:bg-destructive/60 hover:bg-destructive focus-visible:ring-destructive text-white'
             >
               Delete

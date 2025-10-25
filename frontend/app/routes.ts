@@ -13,6 +13,7 @@ export default [
   route('/profile', 'routes/user/index.tsx'),
   route('/admin/orders', 'routes/admin/orders.tsx'),
   route('/admin/users', 'routes/admin/users.tsx'),
+  route('/admin/user/:userId/edit', 'routes/admin/updateUser.tsx'),
   route('/admin/products', 'routes/admin/products.tsx'),
   route('/admin/product/new', 'routes/admin/createProduct.tsx'),
   route('/admin/product/:productId/edit', 'routes/admin/updateProduct.tsx'),

@@ -35,13 +35,14 @@ export type User = {
   };
 };
 
-export type Users = {
+export type UserForAdmin = {
   _id: string;
   email: string;
   name: string;
-  role: string;
-  createdAt: string;
+  role: 'user' | 'admin';
 };
+
+export type UpdateUserAsAdmin = Partial<Omit<UserForAdmin, '_id'>>;
 
 export type UserRegisterForm = Omit<
   User['user'],

@@ -1,5 +1,5 @@
 import type { Route } from './+types/createProduct';
-import ProductFormLayout from '~/components/layouts/ProductFormLayout';
+import FormLayout from '~/components/layouts/FormLayout';
 import { useMutation } from '@tanstack/react-query';
 import { createProductSchema } from '../../../../schema/products';
 import type { CreateProduct, User } from 'type';
@@ -98,7 +98,7 @@ const CreateProductPage = () => {
   };
 
   return (
-    <ProductFormLayout>
+    <FormLayout adminLinks='products'>
       <h1 className='text-3xl md:text-4xl tracking-wide font-bold mb-6'>
         Create Product
       </h1>
@@ -112,7 +112,7 @@ const CreateProductPage = () => {
           <CreateProductForm form={form} setImage={setImage} />
         </form>
       </Form>
-    </ProductFormLayout>
+    </FormLayout>
   );
 };
 

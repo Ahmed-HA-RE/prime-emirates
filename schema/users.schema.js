@@ -22,7 +22,7 @@ export const userBaseSchema = z
       .regex(/^(?=.*[a-z]).*$/, {
         error: 'Password must have at least one lowercase character.',
       }),
-    role: z.enum(['user', 'admin']).prefault('user'),
+    role: z.enum(['user', 'admin']),
   })
   .refine((data) => data.confirmPassword === data.password, {
     path: ['confirmPassword'],
@@ -53,4 +53,10 @@ export const userUpdateInfoSchema = z.object({
           'Password must include at least one uppercase and one lowercase character.',
       }
     ),
+});
+
+export const userForAdminUpdateSchema = z.object({
+  name: userBaseSchema.shape.name.optional(),
+  email: userBaseSchema.shape.email.optional(),
+  role: userBaseSchema.shape.role.optional(),
 });
