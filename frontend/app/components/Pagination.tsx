@@ -12,23 +12,31 @@ import { cn } from '~/lib/utils';
 const PaginationResource = ({
   totalPages,
   currentPage,
+  search,
 }: {
   totalPages: number;
   currentPage: number;
+  search?: string | null;
 }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   let [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page'));
 
   const handleNext = () => {
-    setSearchParams({ page: page < totalPages ? `${page + 1}` : `${page}` });
+    setSearchParams({
+      page: page < totalPages ? `${page + 1}` : `${page}`,
+      search: search ? `${search}` : '',
+    });
   };
   const handlePrev = () => {
-    setSearchParams({ page: page > 1 ? `${page - 1}` : `${1}` });
+    setSearchParams({
+      page: page > 1 ? `${page - 1}` : `${1}`,
+      search: search ? `${search}` : '',
+    });
   };
 
   const handleClick = (page: number) => {
-    setSearchParams({ page: `${page}` });
+    setSearchParams({ page: `${page}`, search: search ? `${search}` : '' });
   };
 
   return (

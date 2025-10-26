@@ -13,10 +13,14 @@ import {
 export const getProducts = asyncHandler(async (req, res, next) => {
   const productsPerPage = 4;
   const pageNumber = Number(req.query.page) || 1;
-  const totalProducts = await Product.countDocuments();
+  const search = req.query.search
+    ? { name: { $regex: req.query.search, $options: 'i' } }
+    : {};
+
+  const totalProducts = await Product.countDocuments({ ...search });
   const totalPages = Math.ceil(totalProducts / productsPerPage);
 
-  const products = await Product.find()
+  const products = await Product.find({ ...search })
     .limit(productsPerPage)
     .skip(productsPerPage * (pageNumber - 1));
 

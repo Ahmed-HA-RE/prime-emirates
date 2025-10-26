@@ -4,9 +4,12 @@ import MainLayout from '~/components/layouts/MainLayout';
 import { Grid } from '@radix-ui/themes';
 import { getProducts } from '~/api/products';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation, useSearchParams } from 'react-router';
+import { Link, useLocation, useSearchParams } from 'react-router';
 import PaginationResource from '~/components/Pagination';
 import { Spinner } from '~/components/ScreenSpinner';
+import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
+import { TriangleAlertIcon } from 'lucide-react';
+import { Button } from '~/components/ui/button';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -21,17 +24,36 @@ export function meta({}: Route.MetaArgs) {
 const HomePage = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
+  const search = searchParams.get('search');
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['products', page],
-    queryFn: () => getProducts(page),
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['products', page, search],
+    queryFn: () => getProducts(page, search),
   });
 
   return (
     <MainLayout>
-      <h1 className='text-black text-3xl font-bold md:text-4xl tracking-wide mb-10'>
-        Latest Products
-      </h1>
+      <div className='flex flex-row justify-between items-center mb-10'>
+        <h1 className='text-black text-3xl font-bold md:text-4xl tracking-wide'>
+          Latest Products
+        </h1>
+
+        {search && (
+          <Button asChild>
+            <Link to='/'>Go Back</Link>
+          </Button>
+        )}
+      </div>
+
+      {isError && (
+        <Alert className='bg-destructive/10 text-destructive border-none max-w-md mx-auto'>
+          <TriangleAlertIcon />
+          <AlertTitle>{error.message}</AlertTitle>
+          <AlertDescription className='text-destructive/80'>
+            Please try again or refresh the page.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {isLoading ? (
         <Spinner />
@@ -49,7 +71,11 @@ const HomePage = () => {
       )}
 
       {data && data?.totalPages > 1 ? (
-        <PaginationResource totalPages={data?.totalPages!} currentPage={page} />
+        <PaginationResource
+          totalPages={data?.totalPages}
+          currentPage={page}
+          search={search}
+        />
       ) : null}
     </MainLayout>
   );

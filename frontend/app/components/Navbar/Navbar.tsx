@@ -1,17 +1,30 @@
-import { useId } from 'react';
+import { useId, useState, type FormEvent } from 'react';
 import { SearchIcon, ShoppingCartIcon } from 'lucide-react';
-
 import UserMenu from '~/components/Navbar/user-menu';
-import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Link } from 'react-router';
 import useCartStore from '~/store/cart';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Badge } from '../ui/badge';
+import { useSearchParams } from 'react-router';
 
 export default function Navbar() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get('search') || '';
+  const [userSearch, setUserSearch] = useState(search);
+
   const cartItems = useCartStore((state) => state.cartItems);
   const id = useId();
+
+  const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (userSearch) {
+      setSearchParams({ search: userSearch });
+      setUserSearch('');
+    } else {
+      setSearchParams({ search: '' });
+    }
+  };
 
   return (
     <header className=' px-4 md:px-6 py-2 bg-gradient-to-r from-blue-500 to-teal-400'>
@@ -25,15 +38,21 @@ export default function Navbar() {
         </Link>
         {/* Search form */}
         <div className='relative md:flex-1/2'>
-          <Input
-            id={id}
-            className='peer h-8 ps-8 pe-2 text-white placeholder:text-white focus-visible:ring-1 ring-white border'
-            placeholder='Search...'
-            type='search'
-          />
-          <div className='pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 text-white peer-disabled:opacity-50'>
-            <SearchIcon size={16} />
-          </div>
+          <form onSubmit={handleOnSubmit}>
+            <Input
+              id={id}
+              className='peer h-8 ps-8 pe-2 text-white placeholder:text-white focus-visible:ring-1 ring-white border'
+              placeholder='Search Products...'
+              type='search'
+              value={userSearch}
+              onChange={(e) => {
+                setUserSearch(e.target.value);
+              }}
+            />
+            <div className='pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 text-white peer-disabled:opacity-50'>
+              <SearchIcon size={16} />
+            </div>
+          </form>
         </div>
 
         {/* Right side */}

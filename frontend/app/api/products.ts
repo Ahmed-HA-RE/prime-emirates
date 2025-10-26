@@ -11,10 +11,13 @@ type GetProductsResponse = {
 
 // Fetch all products
 export const getProducts = async (
-  currentPage: number = 1
+  currentPage: number = 1,
+  search?: string | null
 ): Promise<GetProductsResponse> => {
   try {
-    const { data } = await api.get(`/products?page=${currentPage}`);
+    const { data } = await api.get(
+      `/products?page=${currentPage}${search ? `&search=${search}` : ''}`
+    );
     return data;
   } catch (error) {
     let message = 'Something went wrong';
