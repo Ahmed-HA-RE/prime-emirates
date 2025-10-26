@@ -4,6 +4,7 @@ import { uploadToCloudinary } from '../config/cloudinary.js';
 import {
   createProductSchema,
   updateProductSchema,
+  createReviewsSchema,
 } from '../../schema/products.schema.js';
 
 // @route             GET /api/products
@@ -152,4 +153,64 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
   await product.deleteOne();
 
   res.status(200).json({ message: 'Deleted successfully' });
+});
+
+// @route             POST /api/products/:productId/reviews
+// @description       Create review for a product
+// @access            Private
+export const createReviewForProduct = asyncHandler(async (req, res, next) => {
+  const { productId } = req.params;
+
+  const product = await Product.findById(productId);
+  if (!product) {
+    const err = new Error('No product found');
+    err.status = 404;
+    throw err;
+  }
+
+  if (!req.body || Object.keys(req.body).length === 0) {
+    const err = new Error(
+      'Please provide the rating and comment for the product'
+    );
+    err.status = 400;
+    throw err;
+  }
+
+  const validateReviewReq = createReviewsSchema.safeParse(req.body);
+
+  if (!validateReviewReq.success) {
+    const err = new Error('Invalid Data');
+    err.status = 400;
+    throw err;
+  }
+
+  const { rating, comment } = validateReviewReq.data;
+
+  const alreadyReviewed = product.reviews.find(
+    (review) => review.user.toString() === req.user._id.toString()
+  );
+  console.log(alreadyReviewed);
+
+  if (alreadyReviewed) {
+    const err = new Error('You can only review once per product');
+    err.status = 400;
+    throw err;
+  }
+
+  const newReview = product.reviews.create({
+    rating,
+    comment,
+    name: req.user.name,
+    user: req.user._id,
+  });
+
+  product.reviews.push(newReview);
+  product.numReviews = product.reviews.length;
+
+  product.rating =
+    product.reviews.reduce((a, c) => a + c.rating, 0) / product.reviews.length;
+
+  await product.save();
+
+  res.status(201).json(product);
 });

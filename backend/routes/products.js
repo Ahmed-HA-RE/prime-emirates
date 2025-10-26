@@ -5,6 +5,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  createReviewForProduct,
 } from '../controllers/products.js';
 import upload from '../config/multer.js';
 import { authRole, protect } from '../middleware/authMiddleware.js';
@@ -15,6 +16,8 @@ router
   .route('/')
   .get(getProducts) // GET /api/products
   .post(protect, authRole, upload.single('image'), createProduct); // POST /api/products
+
+router.route('/:productId/reviews').post(protect, createReviewForProduct); // POST /api/products/:productId/reviews
 
 router
   .route('/:productId')

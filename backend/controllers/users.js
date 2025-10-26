@@ -22,7 +22,10 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     throw err;
   }
 
-  const validateReqData = userBaseSchema.safeParse(req.body);
+  const validateReqData = userBaseSchema.safeParse({
+    ...req.body,
+    role: 'user',
+  });
 
   if (!validateReqData.success) {
     const err = new Error('Invalid user data');

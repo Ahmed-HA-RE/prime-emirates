@@ -1,5 +1,5 @@
 import { api } from '~/lib/axios';
-import type { CreateProduct, Product } from 'type';
+import type { CreateProductReviewForm, Product } from 'type';
 import axios from 'axios';
 
 // Fetch all products
@@ -81,6 +81,31 @@ export const deleteProduct = async (productId: string) => {
     const { data } = await api.delete(`/products/${productId}`, {
       withCredentials: true,
     });
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};
+
+// Create review for a product
+export const createProductReview = async (
+  productId: string,
+  reviewData: CreateProductReviewForm
+) => {
+  try {
+    const { data } = await api.post(
+      `/products/${productId}/reviews`,
+      reviewData,
+      {
+        withCredentials: true,
+      }
+    );
     return data;
   } catch (error) {
     let message = 'Something went wrong';

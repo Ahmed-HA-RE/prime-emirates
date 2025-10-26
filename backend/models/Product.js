@@ -50,6 +50,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
     },
     reviews: [reviewSchema],
+    rating: Number,
     numReviews: {
       type: Number,
       min: [0, 'The minimum reviews of the product must be at least 0'],

@@ -1,5 +1,12 @@
 import z from 'zod';
 
+const reviewsSchema = z.object({
+  name: z.string(),
+  rating: z.coerce.number(),
+  comment: z.string(),
+  user: z.string(),
+});
+
 export const productsBaseSchema = z.object({
   name: z.string().nonempty().trim().min(3),
   image: z.string(),
@@ -8,13 +15,8 @@ export const productsBaseSchema = z.object({
   category: z.string().trim().nonempty(),
   price: z.coerce.number().nonnegative(),
   countInStock: z.coerce.number().min(0),
-  reviews: z.array(
-    z.object({
-      name: z.string(),
-      rating: z.coerce.number(),
-      comment: z.string(),
-    })
-  ),
+  reviews: z.array(reviewsSchema),
+  rating: z.coerce.number().min(0).max(5),
   numReviews: z.coerce.number().min(0),
 });
 
@@ -22,6 +24,7 @@ export const createProductSchema = productsBaseSchema.omit({
   image: true,
   reviews: true,
   numReviews: true,
+  rating: true,
 });
 
 export const updateProductSchema = z.object({
@@ -32,4 +35,9 @@ export const updateProductSchema = z.object({
   price: productsBaseSchema.shape.price.optional(),
   countInStock: productsBaseSchema.shape.countInStock.optional(),
   price: productsBaseSchema.shape.price.optional(),
+});
+
+export const createReviewsSchema = reviewsSchema.pick({
+  rating: true,
+  comment: true,
 });

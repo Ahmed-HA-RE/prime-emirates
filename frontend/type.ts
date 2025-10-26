@@ -6,9 +6,11 @@ export type Product = {
   brand: string;
   category: string;
   price: number;
+  rating: number;
   countInStock: number;
   reviews: [{ name: string; rating: number; comment: string; user: string }];
   numReviews: number;
+  createdAt: string;
 };
 
 export type CreateProduct = Omit<
@@ -131,3 +133,12 @@ export type PayPalDetailsRes = {
   status?: string;
   update_time?: string;
 };
+
+export type ProductReview = {
+  name: string;
+  user: string;
+  rating: number;
+  comment: string;
+};
+
+export type CreateProductReview = Pick<ProductReview, 'rating' | 'comment'>;

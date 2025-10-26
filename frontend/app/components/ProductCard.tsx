@@ -34,11 +34,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <Card className='border-none bg-white rounded-t-none text-black'>
         <CardHeader>
           <CardTitle className='line-clamp-1 text-lg'>{product.name}</CardTitle>
-          <CardDescription className='gap-2 mt-3'>
-            <Rating
-              value={product.reviews[0]?.rating}
-              text={product.numReviews}
-            />
+          <CardDescription className='flex flex-row items-center gap-3 mt-3'>
+            <Rating value={product.rating} />
+            <h3 className='text-black '>{product.numReviews} reviews</h3>
           </CardDescription>
         </CardHeader>
         <CardContent>
