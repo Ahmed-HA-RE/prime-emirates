@@ -8,9 +8,14 @@ export type Product = {
   price: number;
   rating: number;
   countInStock: number;
-  reviews: [{ name: string; rating: number; comment: string; user: string }];
+  reviews: {
+    name: string;
+    rating: number;
+    comment: string;
+    user: string;
+    createdAt: string;
+  }[];
   numReviews: number;
-  createdAt: string;
 };
 
 export type CreateProduct = Omit<
@@ -141,4 +146,4 @@ export type ProductReview = {
   comment: string;
 };
 
-export type CreateProductReview = Pick<ProductReview, 'rating' | 'comment'>;
+export type CreateProductReviewForm = Pick<ProductReview, 'rating' | 'comment'>;

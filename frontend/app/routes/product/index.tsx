@@ -147,7 +147,7 @@ const ProductDetailsPage = ({ loaderData }: Route.ComponentProps) => {
       </Flex>
       <SliderCart product={product} open={open} setOpen={setOpen} />
 
-      <div className='grid grid-cols-1 md:grid-cols-2 items-start justify-between mt-10 gap-y-8'>
+      <div className='grid grid-cols-1 md:grid-cols-2 items-start justify-between mt-10 gap-x-4 gap-y-8'>
         {/* Reviews List */}
         <div className='max-w-xl w-full'>
           <h2 className='p-4 w-full bg-gray-100 text-black tracking-wide text-2xl md:text-3xl font-semibold mb-6 '>

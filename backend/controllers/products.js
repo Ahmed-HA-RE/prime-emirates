@@ -11,7 +11,14 @@ import {
 // @description       Get all products
 // @access            Public
 export const getProducts = asyncHandler(async (req, res, next) => {
-  const products = await Product.find();
+  const productsPerPage = 4;
+  const pageNumber = Number(req.query.page) || 1;
+  const totalProducts = await Product.countDocuments();
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+  const products = await Product.find()
+    .limit(productsPerPage)
+    .skip(productsPerPage * (pageNumber - 1));
 
   if (products.length === 0) {
     const err = new Error('No products found');
@@ -19,7 +26,9 @@ export const getProducts = asyncHandler(async (req, res, next) => {
     throw err;
   }
 
-  res.status(200).json(products);
+  res
+    .status(200)
+    .json({ count: totalProducts, totalPages, pageNumber, products });
 });
 
 // @route             GET /api/products/:productId
@@ -189,7 +198,6 @@ export const createReviewForProduct = asyncHandler(async (req, res, next) => {
   const alreadyReviewed = product.reviews.find(
     (review) => review.user.toString() === req.user._id.toString()
   );
-  console.log(alreadyReviewed);
 
   if (alreadyReviewed) {
     const err = new Error('You can only review once per product');

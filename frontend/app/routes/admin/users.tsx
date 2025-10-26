@@ -71,7 +71,7 @@ const UsersPage = () => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => deleteUserAsAdmin(userId),
     onSuccess: () => {
-      toast.success('Product deleted successfully', {
+      toast.success('User deleted successfully', {
         style: {
           '--normal-bg':
             'light-dark(var(--color-green-600), var(--color-green-500))',

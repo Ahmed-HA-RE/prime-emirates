@@ -2,10 +2,19 @@ import { api } from '~/lib/axios';
 import type { CreateProductReviewForm, Product } from 'type';
 import axios from 'axios';
 
+type GetProductsResponse = {
+  count: number;
+  totalPages: number;
+  pageNumber: number;
+  products: Product[];
+};
+
 // Fetch all products
-export const getProducts = async (): Promise<Product[]> => {
+export const getProducts = async (
+  currentPage: number = 1
+): Promise<GetProductsResponse> => {
   try {
-    const { data } = await api.get('/products');
+    const { data } = await api.get(`/products?page=${currentPage}`);
     return data;
   } catch (error) {
     let message = 'Something went wrong';

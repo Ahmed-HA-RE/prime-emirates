@@ -1,4 +1,4 @@
-import { redirect } from 'react-router';
+import { redirect, useSearchParams } from 'react-router';
 import type { Route } from './+types/products';
 import axios from 'axios';
 import type { User } from 'type';
@@ -39,6 +39,7 @@ import { Flex } from '@radix-ui/themes';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import PaginationResource from '~/components/Pagination';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
@@ -59,15 +60,13 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 const ProductsPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [productId, setProductId] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const {
-    data: products,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ['products', 'admin'],
-    queryFn: getProducts,
+  const page = Number(searchParams.get('page'));
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['products', 'admin', page],
+    queryFn: () => getProducts(page),
     staleTime: 5000,
   });
 
@@ -145,7 +144,7 @@ const ProductsPage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {products?.map((product) => (
+                {data?.products?.map((product) => (
                   <TableRow
                     key={product._id}
                     className='has-data-[state=checked]:bg-muted/50 border-black'
@@ -235,6 +234,10 @@ const ProductsPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {data && data?.totalPages > 1 && (
+        <PaginationResource totalPages={data.totalPages} currentPage={page} />
+      )}
     </MainLayout>
   );
 };

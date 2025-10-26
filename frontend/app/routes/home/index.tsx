@@ -4,6 +4,9 @@ import MainLayout from '~/components/layouts/MainLayout';
 import { Grid } from '@radix-ui/themes';
 import { getProducts } from '~/api/products';
 import { useQuery } from '@tanstack/react-query';
+import { useLocation, useSearchParams } from 'react-router';
+import PaginationResource from '~/components/Pagination';
+import { Spinner } from '~/components/ScreenSpinner';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,22 +18,13 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  try {
-    const data = await getProducts();
-    return data;
-  } catch (error: any) {
-    console.log(error);
-    throw new Error(error.message);
-  }
-};
+const HomePage = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
 
-const HomePage = ({ loaderData }: Route.ComponentProps) => {
-  const initialProducts = loaderData;
-  const { data: products, isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: getProducts,
-    initialData: initialProducts,
+  const { data, isLoading } = useQuery({
+    queryKey: ['products', page],
+    queryFn: () => getProducts(page),
   });
 
   return (
@@ -38,16 +32,25 @@ const HomePage = ({ loaderData }: Route.ComponentProps) => {
       <h1 className='text-black text-3xl font-bold md:text-4xl tracking-wide mb-10'>
         Latest Products
       </h1>
-      <Grid
-        columns={{ initial: '1', sm: '2', md: '3' }}
-        gap={'7'}
-        width={'auto'}
-        justify={'center'}
-      >
-        {products.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
-      </Grid>
+
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Grid
+          columns={{ initial: '1', sm: '2', md: '3' }}
+          gap={'7'}
+          width={'auto'}
+          justify={'center'}
+        >
+          {data?.products.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </Grid>
+      )}
+
+      {data && data?.totalPages > 1 ? (
+        <PaginationResource totalPages={data?.totalPages!} currentPage={page} />
+      ) : null}
     </MainLayout>
   );
 };
