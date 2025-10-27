@@ -15,10 +15,10 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "node --watch backend/server.js",
-    "data:import": "node backend/seed.js i",
-    "data:delete": "node backend/seed.js d"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "data:import": "node seed.js i",
+    "data:delete": "node seed.js d"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

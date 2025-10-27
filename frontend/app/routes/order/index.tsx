@@ -25,44 +25,18 @@ import useUserStore from '~/store/user';
 export const meta = () => {
   return [
     {
-      title: 'Order Confirmation | PrimeEmirates',
+      title: 'Order Confirmation | PrimEmirates',
     },
     {
       name: 'description',
       content:
-        'Thank you for your purchase! Review your order details and track your delivery on PrimeEmirates.',
+        'Thank you for your purchase! Review your order details and track your delivery on PrimEmirates.',
     },
   ];
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const id = params.id;
-  const refreshToken = request.headers.get('Cookie');
-  if (!refreshToken) return redirect('/login');
-
-  const token = refreshToken.split('=')[1];
-
-  const userData = await axios.get<User>(
-    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  const orderData = await axios.get<Order>(
-    `${import.meta.env.VITE_BACKEND_URL_DEV}/orders/${id}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  if (
-    orderData.data.user._id !== userData.data.user._id &&
-    userData.data.user.role !== 'admin'
-  ) {
-    return redirect('/');
-  }
-
   return id;
 };
 

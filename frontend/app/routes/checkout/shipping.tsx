@@ -25,7 +25,7 @@ import { Spinner } from '~/components/ScreenSpinner';
 
 export const meta = () => [
   {
-    title: 'Shipping | PrimeEmirates',
+    title: 'Shipping | PrimEmirates',
   },
   {
     name: 'description',
@@ -33,13 +33,6 @@ export const meta = () => [
       'Provide your shipping address to receive your order quickly and safely.',
   },
 ];
-
-export const loader = ({ request }: Route.LoaderArgs) => {
-  const isUser = request.headers.get('Cookie');
-  if (!isUser) {
-    throw redirect('/login');
-  }
-};
 
 const shippingSchema = z.object({
   address: z

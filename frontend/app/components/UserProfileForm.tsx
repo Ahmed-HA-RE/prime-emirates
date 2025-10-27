@@ -6,7 +6,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateUserProfile } from '~/api/users';
 import type { UserUpdateForm } from 'type';
-import { userUpdateInfoSchema } from '../../../schema/users';
+import { userUpdateInfoSchema } from '../schema/users';
 import {
   Form,
   FormControl,

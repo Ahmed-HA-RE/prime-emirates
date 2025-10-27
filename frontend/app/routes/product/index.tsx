@@ -16,7 +16,7 @@ import {
   type SubmitHandler,
   type SubmitErrorHandler,
 } from 'react-hook-form';
-import { createReviewSchema } from '../../../../schema/products';
+import { createReviewSchema } from '../../schema/products';
 import {
   Form,
   FormControl,

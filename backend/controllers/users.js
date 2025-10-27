@@ -3,12 +3,12 @@ import {
   userForAdminUpdateSchema,
   userLoginSchema,
   userUpdateInfoSchema,
-} from '../../schema/users.schema.js';
+} from '../schema/users.js';
 import { User } from '../models/User.js';
 import asyncHandler from 'express-async-handler';
 import * as jose from 'jose';
 import JWT_SECRET from '../utils/encodeJWT.js';
-import setTokenToCookie from '../utils/setCookie.js';
+import setTokenToCookie from '../utils/cookie.js';
 
 // @route              POST api/users
 // @description        Register new user
@@ -117,7 +117,12 @@ export const loginUser = asyncHandler(async (req, res, next) => {
 // @description        Logout user
 // @access             Private
 export const logoutUser = asyncHandler(async (req, res, next) => {
-  res.clearCookie('refreshToken');
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/',
+  });
   res.status(201).json({ success: true });
 });
 

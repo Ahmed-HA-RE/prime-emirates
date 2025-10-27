@@ -3,7 +3,7 @@ import { Product } from '../models/Product.js';
 import { calcPrices } from '../utils/calcPrices.js';
 import { checkIfNewTransaction, verifyPayPalPayment } from '../utils/paypal.js';
 import asyncHandler from 'express-async-handler';
-import { ordersBaseSchema } from '../../schema/orders.js';
+import { ordersBaseSchema } from '../schema/orders.js';
 
 // @route             GET /api/orders
 // @description       Get all orders

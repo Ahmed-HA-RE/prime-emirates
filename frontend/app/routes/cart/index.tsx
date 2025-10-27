@@ -13,7 +13,7 @@ import useUserStore from '~/store/user';
 export const meta = () => {
   return [
     {
-      title: 'Cart | PrimeEmirates',
+      title: 'Cart | PrimEmirates',
     },
     {
       name: 'description',

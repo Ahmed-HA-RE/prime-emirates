@@ -45,7 +45,7 @@ export const userUpdateInfoSchema = z.object({
         if (!val || val === '') return true;
 
         if (val.length > 0) {
-          /^(?=.*[A-Z])/.test(val) && /^(?=.*[a-z])/.test(val);
+          return /^(?=.*[A-Z])/.test(val) && /^(?=.*[a-z])/.test(val);
         }
       },
       {

@@ -2,7 +2,7 @@ import axios from 'axios';
 import useUserStore from '~/store/user';
 import { refreshToken } from '~/api/users';
 
-const backendURL = import.meta.env.VITE_BACKEND_URL_DEV;
+const backendURL = import.meta.env.VITE_BACKEND_URL_PROD;
 
 export const api = axios.create({
   baseURL: backendURL,

@@ -3,7 +3,7 @@ const Footer = () => {
   return (
     <footer className='w-full  py-8 text-black'>
       <p className='text-center text-sm mt-4 tracking-wide'>
-        © {currentYear} PrimeEmirates. All rights reserved.
+        © {currentYear} PrimEmirates. All rights reserved.
       </p>
     </footer>
   );

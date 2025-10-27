@@ -41,7 +41,7 @@ const ProductsCarousel = ({
                       className='hover:scale-105 transition duration-200'
                     />
                   </Link>
-                  <span className='absolute bottom-2 bg-black/60 text-white text-lg font-semibold px-4 py-2 rounded-full backdrop-blur-sm'>
+                  <span className='absolute bottom-0 bg-black/60 text-white text-lg font-semibold px-4 py-3 w-full  backdrop-blur-sm'>
                     {product.name}
                   </span>
                 </CardContent>

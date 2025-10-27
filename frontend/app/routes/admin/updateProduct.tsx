@@ -1,7 +1,7 @@
 import type { Route } from './+types/updateProduct';
 import FormLayout from '~/components/layouts/FormLayout';
 import { useMutation } from '@tanstack/react-query';
-import { updateProductSchema } from '../../../../schema/products';
+import { updateProductSchema } from '../../schema/products';
 import type { UpdateProduct, User } from 'type';
 import { Spinner } from '~/components/ScreenSpinner';
 import {
@@ -21,30 +21,16 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 
 export const meta = () => [
-  { title: 'Edit Product | Admin - PrimeEmirates' },
+  { title: 'Edit Product | Admin - PrimEmirates' },
   {
     name: 'description',
     content:
-      'Admin panel to update existing product details in the PrimeEmirates marketplace.',
+      'Admin panel to update existing product details in the PrimEmirates marketplace.',
   },
 ];
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { productId } = params;
-
-  const refreshToken = request.headers.get('Cookie');
-  if (!refreshToken) return redirect('/login');
-
-  const token = refreshToken.split('=')[1];
-
-  const { data } = await axios.get<User>(
-    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  if (data.user.role !== 'admin') return redirect('/');
 
   return productId;
 };

@@ -6,7 +6,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerUser } from '~/api/users';
 import type { UserRegisterForm } from 'type';
-import { userRegisterFormSchema } from '../../../../schema/users';
+import { userRegisterFormSchema } from '../../schema/users';
 import {
   Form,
   FormControl,
@@ -30,12 +30,12 @@ import { useLocation } from 'react-router';
 
 export const meta = () => [
   {
-    title: 'Register | PrimeEmirates',
+    title: 'Register | PrimEmirates',
   },
   {
     name: 'description',
     content:
-      'Create a new PrimeEmirates account to start shopping and track your orders easily.',
+      'Create a new PrimEmirates account to start shopping and track your orders easily.',
   },
 ];
 

@@ -6,7 +6,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginUser } from '~/api/users';
 import type { UserLoginForm } from 'type';
-import { userLoginFormSchema } from '../../../../schema/users';
+import { userLoginFormSchema } from '../../schema/users';
 import { cn } from '~/lib/utils';
 import {
   Form,
@@ -31,12 +31,12 @@ import { useLocation } from 'react-router';
 
 export const meta = () => [
   {
-    title: 'Login | PrimeEmirates',
+    title: 'Login | PrimEmirates',
   },
   {
     name: 'description',
     content:
-      'Access your PrimeEmirates account to manage orders, view your cart, and track purchases.',
+      'Access your PrimEmirates account to manage orders, view your cart, and track purchases.',
   },
 ];
 

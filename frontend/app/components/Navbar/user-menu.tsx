@@ -2,7 +2,7 @@ import { PackageSearch, LogOutIcon, User, Truck, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { getUserProfile, logout } from '~/api/users';
 import { useMutation } from '@tanstack/react-query';
-import { Spinner } from '../ui/spinner';
+import { Spinner } from '../ScreenSpinner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';

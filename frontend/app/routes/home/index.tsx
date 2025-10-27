@@ -14,7 +14,7 @@ import ProductsCarousel from '~/components/ProductsCarousel';
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
-    { title: 'Welcome to PrimeEmirates' },
+    { title: 'Welcome to PrimEmirates' },
     {
       name: 'description',
       content: 'Your trusted online marketplace across the UAE.',

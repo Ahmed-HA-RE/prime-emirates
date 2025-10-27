@@ -38,29 +38,13 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export const meta = () => [
-  { title: 'All Users | Admin - PrimeEmirates' },
+  { title: 'All Users | Admin - PrimEmirates' },
   {
     name: 'description',
     content:
-      'Admin panel to view and manage all registered users on PrimeEmirates.',
+      'Admin panel to view and manage all registered users on PrimEmirates.',
   },
 ];
-
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const refreshToken = request.headers.get('Cookie');
-  if (!refreshToken) return redirect('/login');
-
-  const token = refreshToken.split('=')[1];
-
-  const { data } = await axios.get<User>(
-    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  if (data.user.role !== 'admin') return redirect('/');
-};
 
 const UsersPage = () => {
   const [openModal, setOpenModal] = useState(false);

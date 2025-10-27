@@ -33,7 +33,7 @@ export default function Navbar() {
         <Link to={'/'} className='flex flex-row md:flex-1/2 items-center gap-1'>
           <img src='/logo.png' alt='logo' />
           <span className='text-white font-semibold tracking-wide hidden md:block'>
-            PrimeEmirates
+            PrimEmirates
           </span>
         </Link>
         {/* Search form */}

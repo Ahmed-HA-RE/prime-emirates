@@ -18,20 +18,14 @@ import { toast } from 'sonner';
 
 export const meta = () => [
   {
-    title: 'Place Order | PrimeEmirates',
+    title: 'Place Order | PrimEmirates',
   },
   {
     name: 'description',
     content:
-      'Review your order details and confirm your purchase on PrimeEmirates.',
+      'Review your order details and confirm your purchase on PrimEmirates.',
   },
 ];
-
-export const loader = ({ request }: Route.LoaderArgs) => {
-  const refreshToken = request.headers.get('Cookie');
-
-  if (!refreshToken) return redirect('/login');
-};
 
 const PlaceOrderPage = () => {
   const shipping = useShippingStore((state) => state.shipping);

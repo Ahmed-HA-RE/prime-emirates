@@ -16,36 +16,23 @@ import { Form } from '~/components/ui/form';
 import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
 import { TriangleAlertIcon } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { userForAdminUpdateSchema } from '../../../../schema/users';
+import { userForAdminUpdateSchema } from '../../schema/users';
 import { useEffect } from 'react';
 import { Button } from '~/components/ui/button';
 import { toast } from 'sonner';
 import UpdateUserForm from '~/components/UpdateUserForm';
 
 export const meta = () => [
-  { title: 'Update User | Admin - PrimeEmirates' },
+  { title: 'Update User | Admin - PrimEmirates' },
   {
     name: 'description',
     content:
-      'Admin panel to update user account details and permissions on PrimeEmirates.',
+      'Admin panel to update user account details and permissions on PrimEmirates.',
   },
 ];
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = params;
-  const refreshToken = request.headers.get('Cookie');
-  if (!refreshToken) return redirect('/login');
-
-  const token = refreshToken.split('=')[1];
-
-  const { data } = await axios.get<User>(
-    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  if (data.user.role !== 'admin') return redirect('/');
   return userId;
 };
 

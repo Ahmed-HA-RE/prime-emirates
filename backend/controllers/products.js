@@ -5,7 +5,7 @@ import {
   createProductSchema,
   updateProductSchema,
   createReviewsSchema,
-} from '../../schema/products.schema.js';
+} from '../schema/products.js';
 
 // @route             GET /api/products
 // @description       Get all products

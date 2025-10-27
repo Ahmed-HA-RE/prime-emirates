@@ -1,7 +1,7 @@
 import type { Route } from './+types/createProduct';
 import FormLayout from '~/components/layouts/FormLayout';
 import { useMutation } from '@tanstack/react-query';
-import { createProductSchema } from '../../../../schema/products';
+import { createProductSchema } from '../../schema/products';
 import type { CreateProduct, User } from 'type';
 import { Spinner } from '~/components/ScreenSpinner';
 import {
@@ -20,29 +20,13 @@ import { redirect } from 'react-router';
 import axios from 'axios';
 
 export const meta = () => [
-  { title: 'Create Product | Admin - PrimeEmirates' },
+  { title: 'Create Product | Admin - PrimEmirates' },
   {
     name: 'description',
     content:
-      'Admin panel to create new products for the PrimeEmirates marketplace.',
+      'Admin panel to create new products for the PrimEmirates marketplace.',
   },
 ];
-
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const refreshToken = request.headers.get('Cookie');
-  if (!refreshToken) return redirect('/login');
-
-  const token = refreshToken.split('=')[1];
-
-  const { data } = await axios.get<User>(
-    `${import.meta.env.VITE_BACKEND_URL_DEV}/users/my-profile`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  if (data.user.role !== 'admin') return redirect('/');
-};
 
 const CreateProductPage = () => {
   const [image, setImage] = useState<File | FileMetadata>();

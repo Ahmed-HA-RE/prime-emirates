@@ -25,21 +25,14 @@ import z from 'zod';
 
 export const meta = () => [
   {
-    title: 'Payment | PrimeEmirates',
+    title: 'Payment | PrimEmirates',
   },
   {
     name: 'description',
     content:
-      'Securely enter your payment details to complete your purchase on PrimeEmirates.',
+      'Securely enter your payment details to complete your purchase on PrimEmirates.',
   },
 ];
-
-export const loader = ({ request }: Route.LoaderArgs) => {
-  const isUser = request.headers.get('Cookie');
-  if (!isUser) {
-    throw redirect('/login');
-  }
-};
 
 type Payment = {
   payment: string;

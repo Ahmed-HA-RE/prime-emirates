@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from 'react-router';
 
 import type { Route } from './+types/root';
@@ -30,7 +31,7 @@ const queryClient = new QueryClient();
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: 'Shop-Emirates' },
+    { title: 'PrimEmirates' },
     {
       name: 'description',
       content:
@@ -58,6 +59,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const isAuthRoutes = useLocation().pathname;
+
   return (
     <html lang='en'>
       <head>
@@ -73,7 +76,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Navbar />
               {children}
             </Theme>
-            <Footer />
+            {!isAuthRoutes.includes('/login') &&
+              !isAuthRoutes.includes('/register') && <Footer />}
           </div>
         </QueryClientProvider>
         <ScrollRestoration />
