@@ -129,3 +129,19 @@ export const createProductReview = async (
     throw new Error(message);
   }
 };
+
+// Get top rated products
+export const getTopRatedProducts = async (): Promise<Product[]> => {
+  try {
+    const { data } = await api.get('/products/top-rated');
+    return data;
+  } catch (error) {
+    let message = 'Something went wrong';
+
+    if (axios.isAxiosError(error)) {
+      message = error.response?.data.message;
+    }
+
+    throw new Error(message);
+  }
+};

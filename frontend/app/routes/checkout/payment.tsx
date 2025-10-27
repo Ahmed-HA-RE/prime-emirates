@@ -23,6 +23,17 @@ import useShippingStore from '~/store/shipping';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 
+export const meta = () => [
+  {
+    title: 'Payment | PrimeEmirates',
+  },
+  {
+    name: 'description',
+    content:
+      'Securely enter your payment details to complete your purchase on PrimeEmirates.',
+  },
+];
+
 export const loader = ({ request }: Route.LoaderArgs) => {
   const isUser = request.headers.get('Cookie');
   if (!isUser) {

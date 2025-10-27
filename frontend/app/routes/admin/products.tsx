@@ -41,6 +41,15 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import PaginationResource from '~/components/Pagination';
 
+export const meta = () => [
+  { title: 'All Products | Admin - PrimeEmirates' },
+  {
+    name: 'description',
+    content:
+      'Admin panel to view and manage all products placed on PrimeEmirates.',
+  },
+];
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
   if (!refreshToken) return redirect('/login');

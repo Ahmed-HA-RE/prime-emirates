@@ -7,6 +7,17 @@ import DisplayOrders from '~/components/DisplayOrders';
 import axios from 'axios';
 import type { User } from 'type';
 
+export const meta = () => [
+  {
+    title: 'User Profile | PrimeEmirates',
+  },
+  {
+    name: 'description',
+    content:
+      'Manage your account details, update your personal information, and view your orders on PrimeEmirates.',
+  },
+];
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
 

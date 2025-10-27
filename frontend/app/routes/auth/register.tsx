@@ -28,6 +28,17 @@ import useUserStore from '~/store/user';
 import AlertError from '~/components/AlertError';
 import { useLocation } from 'react-router';
 
+export const meta = () => [
+  {
+    title: 'Register | PrimeEmirates',
+  },
+  {
+    name: 'description',
+    content:
+      'Create a new PrimeEmirates account to start shopping and track your orders easily.',
+  },
+];
+
 const RegisterPage = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const setUser = useUserStore((state) => state.setUser);

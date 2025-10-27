@@ -37,6 +37,15 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+export const meta = () => [
+  { title: 'All Users | Admin - PrimeEmirates' },
+  {
+    name: 'description',
+    content:
+      'Admin panel to view and manage all registered users on PrimeEmirates.',
+  },
+];
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
   if (!refreshToken) return redirect('/login');

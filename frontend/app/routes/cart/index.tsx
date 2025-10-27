@@ -10,6 +10,18 @@ import type { CartItem } from 'type';
 import { Separator } from '~/components/ui/separator';
 import useUserStore from '~/store/user';
 
+export const meta = () => {
+  return [
+    {
+      title: 'Cart | PrimeEmirates',
+    },
+    {
+      name: 'description',
+      content: 'View and manage the products in your shopping cart.',
+    },
+  ];
+};
+
 const CartPage = () => {
   const navigate = useNavigate();
   const cartItems = useCartStore((state) => state.cartItems);

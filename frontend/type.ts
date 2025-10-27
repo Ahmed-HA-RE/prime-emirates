@@ -20,7 +20,7 @@ export type Product = {
 
 export type CreateProduct = Omit<
   Product,
-  '_id' | 'reviews' | 'numReviews' | 'reviews' | 'image'
+  '_id' | 'reviews' | 'numReviews' | 'reviews' | 'image' | 'rating'
 >;
 
 export type UpdateProduct = Partial<CreateProduct>;

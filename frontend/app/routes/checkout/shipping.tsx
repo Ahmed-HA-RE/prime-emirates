@@ -23,6 +23,17 @@ import { Button } from '~/components/ui/button';
 import { useEffect, useState } from 'react';
 import { Spinner } from '~/components/ScreenSpinner';
 
+export const meta = () => [
+  {
+    title: 'Shipping | PrimeEmirates',
+  },
+  {
+    name: 'description',
+    content:
+      'Provide your shipping address to receive your order quickly and safely.',
+  },
+];
+
 export const loader = ({ request }: Route.LoaderArgs) => {
   const isUser = request.headers.get('Cookie');
   if (!isUser) {

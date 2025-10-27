@@ -19,6 +19,15 @@ import CreateProductForm from '~/components/CreateProductForm';
 import { redirect } from 'react-router';
 import axios from 'axios';
 
+export const meta = () => [
+  { title: 'Create Product | Admin - PrimeEmirates' },
+  {
+    name: 'description',
+    content:
+      'Admin panel to create new products for the PrimeEmirates marketplace.',
+  },
+];
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
   if (!refreshToken) return redirect('/login');

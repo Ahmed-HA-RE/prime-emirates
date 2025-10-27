@@ -22,6 +22,15 @@ import { Button } from '~/components/ui/button';
 import { toast } from 'sonner';
 import UpdateUserForm from '~/components/UpdateUserForm';
 
+export const meta = () => [
+  { title: 'Update User | Admin - PrimeEmirates' },
+  {
+    name: 'description',
+    content:
+      'Admin panel to update user account details and permissions on PrimeEmirates.',
+  },
+];
+
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { userId } = params;
   const refreshToken = request.headers.get('Cookie');

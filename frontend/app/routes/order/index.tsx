@@ -22,6 +22,19 @@ import axios from 'axios';
 import { Button } from '~/components/ui/button';
 import useUserStore from '~/store/user';
 
+export const meta = () => {
+  return [
+    {
+      title: 'Order Confirmation | PrimeEmirates',
+    },
+    {
+      name: 'description',
+      content:
+        'Thank you for your purchase! Review your order details and track your delivery on PrimeEmirates.',
+    },
+  ];
+};
+
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const id = params.id;
   const refreshToken = request.headers.get('Cookie');

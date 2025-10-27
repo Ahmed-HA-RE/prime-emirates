@@ -33,12 +33,12 @@ import { useMutation } from '@tanstack/react-query';
 import { Spinner } from '~/components/ScreenSpinner';
 import { toast } from 'sonner';
 
-export function meta() {
+export function meta({ loaderData }: Route.MetaArgs) {
   return [
-    { title: 'PrimeEmirates' },
+    { title: loaderData.name },
     {
       name: 'description',
-      content: 'Your trusted online marketplace across the UAE.',
+      content: loaderData.description,
     },
   ];
 }

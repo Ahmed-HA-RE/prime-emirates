@@ -16,6 +16,17 @@ import { Button } from '~/components/ui/button';
 import { calculateOrderSummary } from '~/utils/calcOrderSummary';
 import { toast } from 'sonner';
 
+export const meta = () => [
+  {
+    title: 'Place Order | PrimeEmirates',
+  },
+  {
+    name: 'description',
+    content:
+      'Review your order details and confirm your purchase on PrimeEmirates.',
+  },
+];
+
 export const loader = ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
 

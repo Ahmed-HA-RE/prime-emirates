@@ -20,6 +20,15 @@ import { redirect, useNavigate } from 'react-router';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 
+export const meta = () => [
+  { title: 'Edit Product | Admin - PrimeEmirates' },
+  {
+    name: 'description',
+    content:
+      'Admin panel to update existing product details in the PrimeEmirates marketplace.',
+  },
+];
+
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { productId } = params;
 

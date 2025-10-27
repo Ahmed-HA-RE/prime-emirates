@@ -194,7 +194,7 @@ const UpdateProductForm = ({ form, setImage }: CreateProductFormProps) => {
       />
       <UploadProductImage setImage={setImage} />
       <Button className='mt-5' size={'lg'}>
-        Create
+        Update
       </Button>
     </>
   );

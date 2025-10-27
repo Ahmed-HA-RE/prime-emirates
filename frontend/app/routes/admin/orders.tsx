@@ -19,6 +19,15 @@ import {
 } from '../../components/ui/table';
 import { FaCheck } from 'react-icons/fa6';
 
+export const meta = () => [
+  { title: 'All Orders | Admin - PrimeEmirates' },
+  {
+    name: 'description',
+    content:
+      'Admin panel to view and manage all orders placed on PrimeEmirates.',
+  },
+];
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const refreshToken = request.headers.get('Cookie');
   if (!refreshToken) return redirect('/login');

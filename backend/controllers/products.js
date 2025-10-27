@@ -226,3 +226,12 @@ export const createReviewForProduct = asyncHandler(async (req, res, next) => {
 
   res.status(201).json(product);
 });
+
+// @route             GET /api/products/top-rated
+// @description       Get top rated products
+// @access            Public
+export const getTopRatedProducts = asyncHandler(async (req, res, next) => {
+  const products = await Product.find().sort('-rating').limit(3);
+
+  res.status(200).json(products);
+});
